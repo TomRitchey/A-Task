@@ -15,6 +15,7 @@
 		A7FDA35D1BE2C4610044F519 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7FDA35B1BE2C4610044F519 /* LaunchScreen.storyboard */; };
 		A7FDA3681BE2C4620044F519 /* Top_GoT_CharsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3671BE2C4620044F519 /* Top_GoT_CharsTests.m */; };
 		A7FDA3731BE2C4620044F519 /* Top_GoT_CharsUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3721BE2C4620044F519 /* Top_GoT_CharsUITests.m */; };
+		A7FDA3811BE2F6FD0044F519 /* mala pizza.png in Resources */ = {isa = PBXBuildFile; fileRef = A7FDA3801BE2F6FB0044F519 /* mala pizza.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		A7FDA36E1BE2C4620044F519 /* Top GoT CharsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Top GoT CharsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7FDA3721BE2C4620044F519 /* Top_GoT_CharsUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Top_GoT_CharsUITests.m; sourceTree = "<group>"; };
 		A7FDA3741BE2C4620044F519 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A7FDA3801BE2F6FB0044F519 /* mala pizza.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mala pizza.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 		A7FDA34C1BE2C4610044F519 /* Top GoT Chars */ = {
 			isa = PBXGroup;
 			children = (
+				A7FDA3801BE2F6FB0044F519 /* mala pizza.png */,
 				A7FDA3501BE2C4610044F519 /* AppDelegate.h */,
 				A7FDA3511BE2C4610044F519 /* AppDelegate.m */,
 				A7FDA3531BE2C4610044F519 /* ViewController.h */,
@@ -248,6 +251,7 @@
 			files = (
 				A7FDA35D1BE2C4610044F519 /* LaunchScreen.storyboard in Resources */,
 				A7FDA35A1BE2C4610044F519 /* Assets.xcassets in Resources */,
+				A7FDA3811BE2F6FD0044F519 /* mala pizza.png in Resources */,
 				A7FDA3581BE2C4610044F519 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

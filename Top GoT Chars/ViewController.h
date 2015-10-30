@@ -12,6 +12,8 @@
 {
     NSMutableArray* topTitles;
     NSMutableArray* topAbstracts;
+    NSMutableArray* topThumbnails;
+    IBOutlet UITableView *mainTableView;
 }
 
 @end

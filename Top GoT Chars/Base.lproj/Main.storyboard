@@ -8,7 +8,7 @@
         <scene sceneID="wxV-a0-1yt">
             <objects>
                 <tableViewController storyboardIdentifier="TableView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="sCN-JD-NeR" customClass="ViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="28" sectionFooterHeight="28" id="nXA-Ti-0J5">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="100" sectionHeaderHeight="28" sectionFooterHeight="28" id="nXA-Ti-0J5">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
@@ -30,6 +30,9 @@
                             <outlet property="delegate" destination="sCN-JD-NeR" id="PoH-Eh-ccr"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="mainTableView" destination="nXA-Ti-0J5" id="Klt-u6-rp3"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uEo-ol-Ymh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
