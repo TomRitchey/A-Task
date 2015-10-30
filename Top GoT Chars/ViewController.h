@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
+{
+    NSMutableArray* topTitles;
+    NSMutableArray* topAbstracts;
+}
 
 @end
 

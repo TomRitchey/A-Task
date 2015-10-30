@@ -19,12 +19,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    NSMutableArray* topTitles = [[NSMutableArray alloc] init];
-    NSMutableArray* topAbstracts = [[NSMutableArray alloc] init];
+     topTitles = [[NSMutableArray alloc] init];
+     topAbstracts = [[NSMutableArray alloc] init];
     
     
     NSString *category = @"category";
     int limit = 10;
+    for (int i = 0; i<limit; i++) {
+        [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
+    }
+    
     NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",category,limit];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -51,16 +55,19 @@
         
         //NSLog(@"Full data %@",json);
         
+        [topTitles removeAllObjects];
         for(int i=0;i<limit;i++){
         [topTitles  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
         [topAbstracts  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
         }
+        
+        
         NSLog(@"Top Titles %@",topTitles);
         
         
     }] resume];
     
-
+ 
     
     
 }
@@ -70,4 +77,22 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [topTitles count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *simpleTableIdentifier = @"SimpleTableCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+    }
+    
+    cell.textLabel.text = [topTitles objectAtIndex:indexPath.row];
+    return cell;
+}
 @end
