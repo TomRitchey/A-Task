@@ -34,7 +34,9 @@
     for (int i = 0; i<limit; i++) {
         [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
         [topAbstracts  addObject:[NSString stringWithFormat:@"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."]];
-        [topThumbnails  addObject:[UIImage imageNamed: @"mala pizza.png"]];
+        //[topThumbnails  addObject:[UIImage imageNamed: @"mala pizza.png"]];
+        [self genereteBlankImage];
+        [topThumbnails addObject:[self genereteBlankImage]];
     }
     
     NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",category,limit];
@@ -72,12 +74,18 @@
         [topTitles  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
         [topAbstracts  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
             
+            [mainTableView reloadData];
+            
             NSString *url = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
            // NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url ]];
            // UIImage *image = [UIImage imageWithData:imageData];
-            if(url != [NSNull null]){
-                NSLog(@"%lu",(unsigned long)[url length]);
-            usleep(i*3000);
+            if(url == [NSNull null]){
+                [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+                [mainTableView reloadData];
+            
+            }else{
+            //NSLog(@"%lu",(unsigned long)[url length]);
+            //usleep(i*3000);
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
                 NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
                 if ( imageData == nil )
@@ -132,5 +140,24 @@
     //[UIImage imageNamed: @"mala pizza.png"];//
     
     return cell;
+}
+
+- (UIImage *)genereteBlankImage{
+    //UIImage *tempImage = [topThumbnails objectAtIndex:0];
+    
+    //CGSize size = CGSizeMake(tempImage.size.width, tempImage.size.height);
+    CGSize size = CGSizeMake(200, 200);
+    UIGraphicsBeginImageContextWithOptions(size, YES, 0);
+    CGFloat red = arc4random_uniform(255) / 255.0;
+    CGFloat green = arc4random_uniform(255) / 255.0;
+    CGFloat blue = arc4random_uniform(255) / 255.0;
+    
+    [[UIColor colorWithRed:red green:green blue:blue alpha:1.0] setFill];
+    UIRectFill(CGRectMake(0, 0, size.width, size.height));
+    
+    //NSLog(@"width %f height %f",size.width,size.height);
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 @end
