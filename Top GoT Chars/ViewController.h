@@ -10,9 +10,10 @@
 
 @interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 {
-    NSMutableArray* topTitles;
-    NSMutableArray* topAbstracts;
-    NSMutableArray* topThumbnails;
+    NSMutableArray *topTitles;
+    NSMutableArray *topAbstracts;
+    NSMutableArray *topThumbnails;
+    NSMutableArray *topUrls;
     IBOutlet UITableView *mainTableView;
 }
 

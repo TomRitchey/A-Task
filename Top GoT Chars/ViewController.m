@@ -29,7 +29,12 @@
     topTitles = [[NSMutableArray alloc] init];
     topAbstracts = [[NSMutableArray alloc] init];
     topThumbnails = [[NSMutableArray alloc] init];
+    topUrls = [[NSMutableArray alloc] init];
     
+    UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
+    doubleTap.numberOfTapsRequired = 2;
+    doubleTap.numberOfTouchesRequired = 1;
+    [self.tableView addGestureRecognizer:doubleTap];
     
     for (int i = 0; i<limit; i++) {
         [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
@@ -37,6 +42,7 @@
         //[topThumbnails  addObject:[UIImage imageNamed: @"mala pizza.png"]];
         [self genereteBlankImage];
         [topThumbnails addObject:[self genereteBlankImage]];
+        [topUrls addObject:[NSString stringWithFormat:@"empty"]];
     }
     
     NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",category,limit];
@@ -74,8 +80,17 @@
         [topTitles  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
         [topAbstracts  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
             
-            [mainTableView reloadData];
             
+            //NSLog(@"before %@",[topUrls objectAtIndex:i]);
+        [topUrls   replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]]];
+            
+        //NSLog(@"after %@",[topUrls objectAtIndex:i]);
+//
+//            NSLog(@"%@%@",
+//                  [jsonData valueForKey:@"basepath"],
+//                  [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]);
+//            [mainTableView reloadData];
+         
             NSString *url = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
            // NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url ]];
            // UIImage *image = [UIImage imageWithData:imageData];
@@ -142,6 +157,49 @@
     return cell;
 }
 
+
+- (void)doubleTap:(UISwipeGestureRecognizer*)tap
+{
+    if (UIGestureRecognizerStateEnded == tap.state)
+    {
+        CGPoint point = [tap locationInView:tap.view];
+        NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
+        //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
+         //NSLog(@"tap row %@",[topUrls objectAtIndex:indexPath.row]);
+        [self showMessage:indexPath.row];
+    }
+}
+
+- (void)showMessage:(int)index {
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:[NSString  stringWithFormat:@"Do you want to visit page about %@?",[topTitles objectAtIndex:index]]
+                                          message:@"Tap OK to go to Safari"
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction = [UIAlertAction
+                                   actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action")
+                                   style:UIAlertActionStyleCancel
+                                   handler:^(UIAlertAction *action)
+                                   {
+                                       //NSLog(@"Cancel action");
+                                   }];
+    
+    UIAlertAction *okAction = [UIAlertAction
+                               actionWithTitle:NSLocalizedString(@"OK", @"OK action")
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction *action)
+                               {
+                                   [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[topUrls objectAtIndex:index]]];
+                                   //NSLog(@"OK action");
+                               }];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+
 - (UIImage *)genereteBlankImage{
     //UIImage *tempImage = [topThumbnails objectAtIndex:0];
     
@@ -160,4 +218,5 @@
     UIGraphicsEndImageContext();
     return newImage;
 }
+
 @end

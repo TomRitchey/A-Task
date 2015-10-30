@@ -21,8 +21,10 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="99"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
+                                    <gestureRecognizers/>
                                 </tableViewCellContentView>
                                 <animations/>
+                                <gestureRecognizers/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
