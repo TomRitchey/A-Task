@@ -39,11 +39,14 @@
     topThumbnails = [[NSMutableArray alloc] init];
     topUrls = [[NSMutableArray alloc] init];
     
-    UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCharacterSite:)];
     doubleTap.numberOfTapsRequired = 2;
     doubleTap.numberOfTouchesRequired = 1;
     [self.tableView addGestureRecognizer:doubleTap];
     
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(goToCharacterSite:)];
+    //longPress.minimumPressDuration = 0.5;
+    [self.tableView addGestureRecognizer:longPress];
     //NSLog(@" %@",topTitles);
     
     
@@ -78,11 +81,11 @@
         if (isAvailable){
             //[self downloadData:limit inCategory:category];
             //NSLog(@"siec dostepna");
-        }else{NSLog(@"siec nie dostepna");
+        }else{//NSLog(@"siec nie dostepna");
             }
         usleep(30000);
         }
-        NSLog(@"siec dostepna");
+       // NSLog(@"siec dostepna");
         [self downloadData:limit inCategory:category];
     });
     
@@ -206,9 +209,9 @@
 }
 
 
-- (void)doubleTap:(UISwipeGestureRecognizer*)tap
+- (void)goToCharacterSite:(UISwipeGestureRecognizer*)tap
 {
-    if (UIGestureRecognizerStateEnded == tap.state)
+    if (UIGestureRecognizerStateRecognized == tap.state)
     {
         CGPoint point = [tap locationInView:tap.view];
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
