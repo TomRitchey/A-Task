@@ -20,16 +20,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    ////////////////////////////the force quit
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    //if (![defaults objectForKey:@"firstRun"])
-    //    [defaults setObject:[NSDate date] forKey:@"firstRun"];
-    
-    //[[NSUserDefaults standardUserDefaults] synchronize];
-    ////////////////////////////////
-
-    
-    
     NSString *category = @"Characters";
     int limit = 75;
 
@@ -49,18 +39,11 @@
     [self.tableView addGestureRecognizer:longPress];
     //NSLog(@" %@",topTitles);
     
-    
-    /////check if first time
-    //NSUserDefaults *defaultss = [NSUserDefaults standardUserDefaults];
-    //if(![defaultss objectForKey:@"firstRun"]){
-    //    [topTitles removeAllObjects]; [topAbstracts removeAllObjects];[topUrls removeAllObjects]; [topThumbnails removeAllObjects];}
-    ///////////////////////////
+
     
     for (int i = 0; i<limit; i++) {
         [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
         [topAbstracts  addObject:[NSString stringWithFormat:@"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."]];
-        //[topThumbnails  addObject:[UIImage imageNamed: @"mala pizza.png"]];
-        //[self genereteBlankImage];
         [topThumbnails addObject:[self genereteBlankImage]];
         [topUrls addObject:[NSString stringWithFormat:@"empty"]];
     }
@@ -78,14 +61,15 @@
         success = SCNetworkReachabilityGetFlags(reachability, &flags);
         isAvailable = success && (flags & kSCNetworkFlagsReachable) &&
         !(flags & kSCNetworkFlagsConnectionRequired);
-        if (isAvailable){
-            //[self downloadData:limit inCategory:category];
-            //NSLog(@"siec dostepna");
-        }else{//NSLog(@"siec nie dostepna");
-            }
+//        if (isAvailable){
+//            //[self downloadData:limit inCategory:category];
+//            //NSLog(@"siec dostepna");
+//        }else{//NSLog(@"siec nie dostepna");
+//            }
         usleep(30000);
         }
        // NSLog(@"siec dostepna");
+        usleep(30000);
         [self downloadData:limit inCategory:category];
     });
     
@@ -118,21 +102,6 @@
         }else{
             //NSLog(@"jest ma data");
             id jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            //NSLog(@"data %@",jsonData);
-            
-            //        if([jsonData isKindOfClass:[NSDictionary class]])
-            //        {
-            //            NSLog(@"tak jest dobry");
-            //            //NSDictionary *results = json;
-            //        }else{
-            //            NSLog(@"Nie jest dobry");
-            //        }
-            
-            //NSLog(@"Full data %@",json);
-            
-            //[topTitles removeAllObjects];
-            //[topAbstracts removeAllObjects];
-            //[topThumbnails removeAllObjects];
             
             for(int i=0;i<limit;i++){
                 [topTitles  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
@@ -142,16 +111,8 @@
                 //NSLog(@"before %@",[topUrls objectAtIndex:i]);
                 [topUrls   replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]]];
                 
-                //NSLog(@"after %@",[topUrls objectAtIndex:i]);
-                //
-                //            NSLog(@"%@%@",
-                //                  [jsonData valueForKey:@"basepath"],
-                //                  [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]);
-                //            [mainTableView reloadData];
-                
                 NSString *url = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
-                // NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url ]];
-                // UIImage *image = [UIImage imageWithData:imageData];
+                
                 if(url == [NSNull null]){
                     [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
                     [mainTableView reloadData];
@@ -223,7 +184,7 @@
     }
 }
 
-- (void)showMessage:(int)index {
+- (void)showMessage:(NSInteger)index {
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:[NSString  stringWithFormat:@"Do you want to visit page about %@?",[topTitles objectAtIndex:index]]
                                           message:@"Tap OK to go to Safari"
