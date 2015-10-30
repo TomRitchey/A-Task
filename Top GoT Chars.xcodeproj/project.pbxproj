@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		A71598991BE39A200065EA7F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A71598981BE39A200065EA7F /* SystemConfiguration.framework */; };
+		A7BFB5CE1BE3C3390082C3CB /* Huse of Stork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */; };
+		A7BFB5D21BE3C8B70082C3CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */; };
 		A7FDA34F1BE2C4610044F519 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA34E1BE2C4610044F519 /* main.m */; };
 		A7FDA3521BE2C4610044F519 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3511BE2C4610044F519 /* AppDelegate.m */; };
 		A7FDA3551BE2C4610044F519 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3541BE2C4610044F519 /* ViewController.m */; };
 		A7FDA3581BE2C4610044F519 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7FDA3561BE2C4610044F519 /* Main.storyboard */; };
-		A7FDA35A1BE2C4610044F519 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7FDA3591BE2C4610044F519 /* Assets.xcassets */; };
 		A7FDA35D1BE2C4610044F519 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7FDA35B1BE2C4610044F519 /* LaunchScreen.storyboard */; };
 		A7FDA3681BE2C4620044F519 /* Top_GoT_CharsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3671BE2C4620044F519 /* Top_GoT_CharsTests.m */; };
 		A7FDA3731BE2C4620044F519 /* Top_GoT_CharsUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3721BE2C4620044F519 /* Top_GoT_CharsUITests.m */; };
@@ -38,6 +39,8 @@
 
 /* Begin PBXFileReference section */
 		A71598981BE39A200065EA7F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Huse of Stork@3x.png"; sourceTree = "<group>"; };
+		A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7FDA34A1BE2C4610044F519 /* Top GoT Chars.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Top GoT Chars.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7FDA34E1BE2C4610044F519 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A7FDA3501BE2C4610044F519 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -45,7 +48,6 @@
 		A7FDA3531BE2C4610044F519 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		A7FDA3541BE2C4610044F519 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		A7FDA3571BE2C4610044F519 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		A7FDA3591BE2C4610044F519 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7FDA35C1BE2C4610044F519 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A7FDA35E1BE2C4610044F519 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A7FDA3631BE2C4620044F519 /* Top GoT CharsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Top GoT CharsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +88,7 @@
 		A7FDA3411BE2C4610044F519 = {
 			isa = PBXGroup;
 			children = (
+				A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */,
 				A71598981BE39A200065EA7F /* SystemConfiguration.framework */,
 				A7FDA34C1BE2C4610044F519 /* Top GoT Chars */,
 				A7FDA3661BE2C4620044F519 /* Top GoT CharsTests */,
@@ -113,8 +116,8 @@
 				A7FDA3531BE2C4610044F519 /* ViewController.h */,
 				A7FDA3541BE2C4610044F519 /* ViewController.m */,
 				A7FDA3561BE2C4610044F519 /* Main.storyboard */,
-				A7FDA3591BE2C4610044F519 /* Assets.xcassets */,
 				A7FDA35B1BE2C4610044F519 /* LaunchScreen.storyboard */,
+				A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */,
 				A7FDA35E1BE2C4610044F519 /* Info.plist */,
 				A7FDA34D1BE2C4610044F519 /* Supporting Files */,
 			);
@@ -253,9 +256,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7BFB5CE1BE3C3390082C3CB /* Huse of Stork@3x.png in Resources */,
 				A7FDA35D1BE2C4610044F519 /* LaunchScreen.storyboard in Resources */,
-				A7FDA35A1BE2C4610044F519 /* Assets.xcassets in Resources */,
 				A7FDA3811BE2F6FD0044F519 /* mala pizza.png in Resources */,
+				A7BFB5D21BE3C8B70082C3CB /* Assets.xcassets in Resources */,
 				A7FDA3581BE2C4610044F519 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
