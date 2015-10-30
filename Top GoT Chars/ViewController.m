@@ -202,7 +202,7 @@
     cell.detailTextLabel.text = [topAbstracts objectAtIndex:indexPath.row];
     //cell.imageView.image = [topThumbnails objectAtIndex:indexPath.row];
     cell.imageView.image = [topThumbnails objectAtIndex:indexPath.row];
-   //[topThumbnails objectAtIndex:indexPath.row]
+   
     //[UIImage imageNamed: @"mala pizza.png"];//
     
     return cell;
@@ -217,7 +217,9 @@
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
         //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
          //NSLog(@"tap row %@",[topUrls objectAtIndex:indexPath.row]);
+        if(![[topTitles objectAtIndex:indexPath.row]isEqualToString:@"No Connection"]){
         [self showMessage:indexPath.row];
+        }
     }
 }
 
