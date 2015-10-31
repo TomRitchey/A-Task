@@ -32,6 +32,7 @@
                             <outlet property="delegate" destination="sCN-JD-NeR" id="PoH-Eh-ccr"/>
                         </connections>
                     </tableView>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
                         <outlet property="mainTableView" destination="nXA-Ti-0J5" id="Klt-u6-rp3"/>
                     </connections>

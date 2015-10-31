@@ -82,7 +82,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)downloadData:(int)limit inCategory:(NSString*)category{
+
+- (void)downloadData:(int)limit inCategory:(NSString*)category {
     
     NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",category,limit];
     
@@ -144,13 +145,11 @@
     
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [topTitles count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *tableIdentifier = @"GoT Characters";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tableIdentifier];
@@ -161,37 +160,48 @@
     
     cell.textLabel.text = [topTitles objectAtIndex:indexPath.row];
     cell.detailTextLabel.text = [topAbstracts objectAtIndex:indexPath.row];
-    //cell.imageView.image = [topThumbnails objectAtIndex:indexPath.row];
     cell.imageView.image = [topThumbnails objectAtIndex:indexPath.row];
-   
-    //[UIImage imageNamed: @"mala pizza.png"];//
-    
     return cell;
 }
 
 
-- (void)goToCharacterSite:(UISwipeGestureRecognizer*)tap
-{
+- (void)goToCharacterSite:(UISwipeGestureRecognizer*)tap {
     if (UIGestureRecognizerStateRecognized == tap.state)
     {
         CGPoint point = [tap locationInView:tap.view];
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
         //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
          //NSLog(@"tap row %@",[topUrls objectAtIndex:indexPath.row]);
-        if(![[topTitles objectAtIndex:indexPath.row]isEqualToString:@"No Connection"]){
+        if([[topTitles objectAtIndex:indexPath.row]isEqualToString:@"No Connection"]){
+            [self showErrorMessage];}else{
         [self showMessage:indexPath.row];
         }
     }
 }
 
+- (void)showErrorMessage {
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"No connection"
+                                                            message:@"Check your internet connection or try again later."
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:@"Dismiss"
+                                                            style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * action) {}];
+    
+    [alert addAction:dismissAction];
+    [self presentViewController:alert animated:YES completion:nil];
+
+
+}
+
 - (void)showMessage:(NSInteger)index {
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:[NSString  stringWithFormat:@"Do you want to visit page about %@?",[topTitles objectAtIndex:index]]
-                                          message:@"Tap OK to go to Safari"
+                                          message:@"Tap OK to go to Safari."
                                           preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *cancelAction = [UIAlertAction
-                                   actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action")
+                                   actionWithTitle:@"Cancel"
                                    style:UIAlertActionStyleCancel
                                    handler:^(UIAlertAction *action)
                                    {
@@ -199,7 +209,7 @@
                                    }];
     
     UIAlertAction *okAction = [UIAlertAction
-                               actionWithTitle:NSLocalizedString(@"OK", @"OK action")
+                               actionWithTitle:@"OK"
                                style:UIAlertActionStyleDefault
                                handler:^(UIAlertAction *action)
                                {
@@ -214,7 +224,7 @@
 }
 
 
-- (UIImage *)genereteBlankImage{
+- (UIImage *)genereteBlankImage {
     //UIImage *tempImage = [topThumbnails objectAtIndex:0];
     
     //CGSize size = CGSizeMake(tempImage.size.width, tempImage.size.height);
