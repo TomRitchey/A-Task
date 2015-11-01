@@ -18,7 +18,7 @@
     IBOutlet UITableView *mainTableView;
     NSString *category;
     int limit;
-    NSOperationQueue *myQueue;
+    NSOperationQueue *loadingThumbnailsQueue;
 }
 
 @end

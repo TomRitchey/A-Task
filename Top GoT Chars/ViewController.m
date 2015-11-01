@@ -23,7 +23,8 @@
     category = @"Characters";
     limit = 75;
 
-    myQueue = [[NSOperationQueue alloc] init];
+    loadingThumbnailsQueue = [[NSOperationQueue alloc] init];
+    //loadingThumbnailsQueue.maxConcurrentOperationCount = 10;
     
     topTitles = [[NSMutableArray alloc] init];
     topAbstracts = [[NSMutableArray alloc] init];
@@ -96,60 +97,65 @@
         }else{
             //NSLog(@"jest ma data");
             jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            
         }
         //NSLog(@"Top Titles %@",topTitles);
     }] resume];
     
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW,0), ^{
-    while(!jsonData){
-        usleep(200000);
-    }
+    [loadingThumbnailsQueue addOperationWithBlock: ^ {
+        while(!jsonData){
+            usleep(200000);
+        }
         //NSLog(@"%@",jsonData);
-    for(int i=0;i<limit;i++){
-        [topTitles  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
-        [topAbstracts  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
-        
-        
-        //NSLog(@"before %@",[topUrls objectAtIndex:i]);
-        [topUrls   replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]]];
-        
-        NSString *url = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
-        
-        if(url == [NSNull null]){
-            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+        for(int i=0;i<limit;i++){
+            [topTitles  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
+            [topAbstracts  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
+            
+            
+            //NSLog(@"before %@",[topUrls objectAtIndex:i]);
+            [topUrls   replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]]];
+            
+            NSString *url = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
+            
+            if(url == [NSNull null]){
+                [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+                [mainTableView reloadData];
+                
+            }else{
+                //NSLog(@"%lu",(unsigned long)[url length]);
+                usleep(i*600);
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+                    if ( imageData == nil )
+                        return;
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        
+                        UIImage *image = [UIImage imageWithData:imageData];
+                        //[topThumbnails addObject:image];
+                        [topThumbnails replaceObjectAtIndex:i withObject:image];
+                        //if (!(i%4) || i == limit-1) {
+                        //NSLog(@"i jest %i",i);
+                        //usleep(i*500);
+                        [mainTableView reloadData];
+                        //                    [mainTableView beginUpdates];
+                        //                    [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:i inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
+                        //                    [mainTableView endUpdates];
+                        //}
+                        
+                    });
+                });
+            }
             [mainTableView reloadData];
             
-        }else{
-            //NSLog(@"%lu",(unsigned long)[url length]);
-            usleep(i*600);
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
-                NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-                if ( imageData == nil )
-                    return;
-                dispatch_sync(dispatch_get_main_queue(), ^{
-                    
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    //[topThumbnails addObject:image];
-                    [topThumbnails replaceObjectAtIndex:i withObject:image];
-                    //if (!(i%4) || i == limit-1) {
-                    //NSLog(@"i jest %i",i);
-                    usleep(i*500);
-                    [mainTableView reloadData];
-//                    [mainTableView beginUpdates];
-//                    [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:i inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
-//                    [mainTableView endUpdates];
-                    //}
-                    
-                });
-            });
+            // [topThumbnails  addObject:image];
+            //NSLog(@"%@",[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"]);
         }
-         [mainTableView reloadData];
-    
-        // [topThumbnails  addObject:image];
-        //NSLog(@"%@",[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"]);
-    }
-    });
+        
+    }];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW,0), ^{
+    //});
+    //wsadź spowrotem do urlsession
+
     //NSLog(@"session closed");
 }
 
@@ -172,7 +178,7 @@
 }
 
 - (void)refreshPull{
-    
+    [loadingThumbnailsQueue cancelAllOperations];
     [self initDefaultValues:NO];
     [mainTableView reloadData];
     [self downloadData:limit inCategory:category];
