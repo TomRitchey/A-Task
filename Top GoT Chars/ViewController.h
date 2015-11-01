@@ -18,6 +18,7 @@
     IBOutlet UITableView *mainTableView;
     NSString *category;
     int limit;
+    NSOperationQueue *myQueue;
 }
 
 @end

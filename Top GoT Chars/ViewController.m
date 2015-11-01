@@ -23,6 +23,8 @@
     category = @"Characters";
     limit = 75;
 
+    myQueue = [[NSOperationQueue alloc] init];
+    
     topTitles = [[NSMutableArray alloc] init];
     topAbstracts = [[NSMutableArray alloc] init];
     topThumbnails = [[NSMutableArray alloc] init];
