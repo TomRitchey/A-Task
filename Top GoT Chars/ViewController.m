@@ -20,33 +20,29 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSString *category = @"Characters";
-    int limit = 75;
+    category = @"Characters";
+    limit = 75;
 
-    
     topTitles = [[NSMutableArray alloc] init];
     topAbstracts = [[NSMutableArray alloc] init];
     topThumbnails = [[NSMutableArray alloc] init];
     topUrls = [[NSMutableArray alloc] init];
     
-    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCharacterSite:)];
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
     doubleTap.numberOfTouchesRequired = 1;
     [self.tableView addGestureRecognizer:doubleTap];
     
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(goToCharacterSite:)];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     //longPress.minimumPressDuration = 0.5;
     [self.tableView addGestureRecognizer:longPress];
-    //NSLog(@" %@",topTitles);
     
-
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc]init];
+    [refreshControl addTarget:self action:@selector(refreshPull) forControlEvents:UIControlEventValueChanged];
+    //refreshControl.tintColor = [UIColor blueColor];
+    self.refreshControl = refreshControl;
     
-    for (int i = 0; i<limit; i++) {
-        [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
-        [topAbstracts  addObject:[NSString stringWithFormat:@"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."]];
-        [topThumbnails addObject:[self genereteBlankImage]];
-        [topUrls addObject:[NSString stringWithFormat:@"empty"]];
-    }
+    [self initDefaultValues:YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
         
@@ -55,25 +51,21 @@
         const char *host_name = [@"http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki"
                                  cStringUsingEncoding:NSASCIIStringEncoding];
         while(!isAvailable){
-        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,
-                                                                                    host_name);
+        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,host_name);
         SCNetworkReachabilityFlags flags;
         success = SCNetworkReachabilityGetFlags(reachability, &flags);
-        isAvailable = success && (flags & kSCNetworkFlagsReachable) &&
-        !(flags & kSCNetworkFlagsConnectionRequired);
+        isAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
 //        if (isAvailable){
 //            //[self downloadData:limit inCategory:category];
 //            //NSLog(@"siec dostepna");
 //        }else{//NSLog(@"siec nie dostepna");
 //            }
-        usleep(30000);
+        usleep(1000000);
         }
        // NSLog(@"siec dostepna");
         usleep(30000);
         [self downloadData:limit inCategory:category];
     });
-    
-    
     
 }
 
@@ -82,10 +74,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-- (void)downloadData:(int)limit inCategory:(NSString*)category {
+- (void)downloadData:(int)dataLimit inCategory:(NSString*)dataCategory {
     
-    NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",category,limit];
+    NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",dataCategory,dataLimit];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:baseUrl]];
@@ -102,47 +93,88 @@
         if(!data){
         }else{
             //NSLog(@"jest ma data");
-            id jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            
-            for(int i=0;i<limit;i++){
-                [topTitles  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
-                [topAbstracts  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
-                
-                
-                //NSLog(@"before %@",[topUrls objectAtIndex:i]);
-                [topUrls   replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]]];
-                
-                NSString *url = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
-                
-                if(url == [NSNull null]){
-                    [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
-                    [mainTableView reloadData];
-                    
-                }else{
-                    //NSLog(@"%lu",(unsigned long)[url length]);
-                    usleep(i*600);
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
-                        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-                        if ( imageData == nil )
-                            return;
-                        dispatch_sync(dispatch_get_main_queue(), ^{
-                            
-                            UIImage *image = [UIImage imageWithData:imageData];
-                            //[topThumbnails addObject:image];
-                            [topThumbnails replaceObjectAtIndex:i withObject:image];
-                            [mainTableView reloadData];
-                        });
-                    });
-                }
-                // [topThumbnails  addObject:image];
-                //NSLog(@"%@",[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"]);
-            }
+            jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         }
-        [mainTableView reloadData];
         //NSLog(@"Top Titles %@",topTitles);
     }] resume];
     
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW,0), ^{
+    while(!jsonData){
+        usleep(200000);
+    }
+        //NSLog(@"%@",jsonData);
+    for(int i=0;i<limit;i++){
+        [topTitles  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
+        [topAbstracts  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
+        
+        
+        //NSLog(@"before %@",[topUrls objectAtIndex:i]);
+        [topUrls   replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]]];
+        
+        NSString *url = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
+        
+        if(url == [NSNull null]){
+            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+            [mainTableView reloadData];
+            
+        }else{
+            //NSLog(@"%lu",(unsigned long)[url length]);
+            usleep(i*600);
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+                NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+                if ( imageData == nil )
+                    return;
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    //[topThumbnails addObject:image];
+                    [topThumbnails replaceObjectAtIndex:i withObject:image];
+                    //if (!(i%4) || i == limit-1) {
+                    //NSLog(@"i jest %i",i);
+                    usleep(i*500);
+                    [mainTableView reloadData];
+//                    [mainTableView beginUpdates];
+//                    [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:i inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
+//                    [mainTableView endUpdates];
+                    //}
+                    
+                });
+            });
+        }
+         [mainTableView reloadData];
+    
+        // [topThumbnails  addObject:image];
+        //NSLog(@"%@",[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"]);
+    }
+    });
+    //NSLog(@"session closed");
+}
+
+- (void)initDefaultValues:(bool)defaultValues{
+    if(!defaultValues){
+        for (int i = 0; i<limit; i++) {
+            [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"Refreshing..."]];
+            [topAbstracts  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."]];
+            [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
+            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+        }
+    }else{
+        for (int i = 0; i<limit; i++) {
+            [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
+            [topAbstracts  addObject:[NSString stringWithFormat:@"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."]];
+            [topUrls addObject:[NSString stringWithFormat:@"empty"]];
+            [topThumbnails addObject:[self genereteBlankImage]];
+        }
+    }
+}
+
+- (void)refreshPull{
+    
+    [self initDefaultValues:NO];
+    [mainTableView reloadData];
+    [self downloadData:limit inCategory:category];
+    [self.refreshControl endRefreshing];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -164,6 +196,13 @@
     return cell;
 }
 
+- (void)doubleTap:(UISwipeGestureRecognizer*)tap {
+    [self goToCharacterSite:tap];
+}
+
+- (void)longPress:(UISwipeGestureRecognizer*)tap {
+    [self goToCharacterSite:tap];
+}
 
 - (void)goToCharacterSite:(UISwipeGestureRecognizer*)tap {
     if (UIGestureRecognizerStateRecognized == tap.state)
@@ -171,8 +210,7 @@
         CGPoint point = [tap locationInView:tap.view];
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
         //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
-         //NSLog(@"tap row %@",[topUrls objectAtIndex:indexPath.row]);
-        if([[topTitles objectAtIndex:indexPath.row]isEqualToString:@"No Connection"]){
+        if([[topUrls objectAtIndex:indexPath.row]isEqualToString:@"empty"]){
             [self showErrorMessage];}else{
         [self showMessage:indexPath.row];
         }
@@ -225,9 +263,7 @@
 
 
 - (UIImage *)genereteBlankImage {
-    //UIImage *tempImage = [topThumbnails objectAtIndex:0];
-    
-    //CGSize size = CGSizeMake(tempImage.size.width, tempImage.size.height);
+   
     CGSize size = CGSizeMake(200, 200);
     UIGraphicsBeginImageContextWithOptions(size, YES, 0);
     CGFloat red = arc4random_uniform(255) / 255.0;
@@ -237,7 +273,6 @@
     [[UIColor colorWithRed:red green:green blue:blue alpha:1.0] setFill];
     UIRectFill(CGRectMake(0, 0, size.width, size.height));
     
-    //NSLog(@"width %f height %f",size.width,size.height);
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;

@@ -10,11 +10,14 @@
 
 @interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 {
+    id jsonData;
     NSMutableArray *topTitles;
     NSMutableArray *topAbstracts;
     NSMutableArray *topThumbnails;
     NSMutableArray *topUrls;
     IBOutlet UITableView *mainTableView;
+    NSString *category;
+    int limit;
 }
 
 @end
