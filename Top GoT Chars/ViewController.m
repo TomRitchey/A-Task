@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import <SystemConfiguration/SCNetworkReachability.h>
 
 @interface ViewController ()
 
@@ -25,7 +24,6 @@
 
     loadingDataQueue = [[NSOperationQueue alloc] init];
     loadingThumbnailsQueue = [[NSOperationQueue alloc] init];
-    //loadingDataQueue.maxConcurrentOperationCount = 10;
     
     topTitles = [[NSMutableArray alloc] init];
     topAbstracts = [[NSMutableArray alloc] init];
@@ -48,22 +46,10 @@
     
     [self initDefaultValues:YES];
     
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
-        
-        bool success = NO;
-        bool isAvailable = NO;
-        const char *host_name = [@"http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki"
-                                 cStringUsingEncoding:NSASCIIStringEncoding];
-        while(!isAvailable){
-        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,host_name);
-        SCNetworkReachabilityFlags flags;
-        success = SCNetworkReachabilityGetFlags(reachability, &flags);
-        isAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
-//        if (isAvailable){
-//            //[self downloadData:limit inCategory:category];
-//            //NSLog(@"siec dostepna");
-//        }else{//NSLog(@"siec nie dostepna");
-//            }
+    
+        while(![self checkIfNetworkAwaliable]){
         usleep(1000000);
         }
        // NSLog(@"siec dostepna");
@@ -125,28 +111,43 @@
             }else{
                 //NSLog(@"%lu",(unsigned long)[url length]);
                 usleep(i*600);
-                [loadingThumbnailsQueue addOperationWithBlock: ^ {
-                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-                    if ( imageData == nil )
-                        return;
-                    dispatch_sync(dispatch_get_main_queue(), ^{
+///////////////////////////////////////////////////////////////////////////////////////////////
+                __block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+                    
+                        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+                      
+                        if(imageData!=nil && ![operation isCancelled]){
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                
+                                UIImage *image = [UIImage imageWithData:imageData];
+                                [topThumbnails replaceObjectAtIndex:i withObject:image];
+                                if (!(i%3)) {
+                                    [mainTableView reloadData]; }
+                                
+                            });
+                        }
                         
-                        UIImage *image = [UIImage imageWithData:imageData];
-                        //[topThumbnails addObject:image];
-                        [topThumbnails replaceObjectAtIndex:i withObject:image];
-                        if (!(i%3)) {
-                            NSLog(@"i %i", i);
-                        [mainTableView reloadData]; }
-                        //NSLog(@"i jest %i",i);
-                        //usleep(arc4random_uniform(50000));
-                       
-//                                            [mainTableView beginUpdates];
-//                                            [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:i inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
-//                                            [mainTableView endUpdates];
-                        //}
-                        
-                    });
+                    
                 }];
+               
+                    [loadingThumbnailsQueue addOperation:operation];
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+//                [loadingThumbnailsQueue addOperationWithBlock: ^ {
+//                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+//                
+//                    if(imageData!=nil){
+//                        dispatch_async(dispatch_get_main_queue(), ^{
+//                    
+//                            UIImage *image = [UIImage imageWithData:imageData];
+//                            [topThumbnails replaceObjectAtIndex:i withObject:image];
+//                            if (!(i%3)) {
+//                                [mainTableView reloadData]; }
+// 
+//                        });
+//                    }
+//                }];
+///////////////////////////////////////////////////////////////////////////////////////////////
             }
             //[mainTableView reloadData]; 
             
@@ -155,13 +156,23 @@
         }
         
     }];
-    [loadingDataQueue addOperationWithBlock: ^ {
-        [mainTableView reloadData]; }];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW,0), ^{
-    //});
-    //wsadź spowrotem do urlsession
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+    [mainTableView reloadData];});
 
     //NSLog(@"session closed");
+}
+
+- (bool)checkIfNetworkAwaliable{
+    bool success = NO;
+    bool isAvailable = NO;
+    const char *host_name = [@"http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki"
+                             cStringUsingEncoding:NSASCIIStringEncoding];
+
+        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,host_name);
+        SCNetworkReachabilityFlags flags;
+        success = SCNetworkReachabilityGetFlags(reachability, &flags);
+        isAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
+    return isAvailable;
 }
 
 - (void)initDefaultValues:(bool)defaultValues{
@@ -183,23 +194,20 @@
 }
 
 - (void)refreshPull{
+    
     [loadingDataQueue cancelAllOperations];
     [loadingThumbnailsQueue cancelAllOperations];
+    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//    });
     [self initDefaultValues:NO];
     [mainTableView reloadData]; 
-    bool success = NO;
-    bool isAvailable = NO;
-    const char *host_name = [@"http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki"
-                             cStringUsingEncoding:NSASCIIStringEncoding];
-    
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,host_name);
-    SCNetworkReachabilityFlags flags;
-    success = SCNetworkReachabilityGetFlags(reachability, &flags);
-    isAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
-   if(isAvailable){
+
+   if([self checkIfNetworkAwaliable]){
+        usleep(500);
        [self downloadData:limit inCategory:category];
    }else{
-       [self initDefaultValues:YES];
+       //[self initDefaultValues:YES];
        [mainTableView reloadData];
        [self showErrorMessage];
    }
@@ -234,14 +242,18 @@
 }
 
 - (void)goToCharacterSite:(UISwipeGestureRecognizer*)tap {
+
     if (UIGestureRecognizerStateRecognized == tap.state)
     {
         CGPoint point = [tap locationInView:tap.view];
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
         //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        if([[topUrls objectAtIndex:indexPath.row]isEqualToString:@"empty"]){
-            [self showErrorMessage];}else{
-        [self showMessage:indexPath.row];
+        if([[topTitles objectAtIndex:1]  isEqual: @"Refreshing..."]){
+            if([[topUrls objectAtIndex:indexPath.row]isEqualToString:@"empty"]){
+                [self showErrorMessage];
+            }else{
+                [self showMessage:indexPath.row];
+            }
         }
     }
 }

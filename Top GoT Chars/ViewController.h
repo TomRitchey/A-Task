@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SystemConfiguration/SCNetworkReachability.h>
 
 @interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 {
@@ -20,7 +21,6 @@
     int limit;
     NSOperationQueue *loadingThumbnailsQueue;
     NSOperationQueue *loadingDataQueue;
-    //NSInteger refreshCount;
 }
 
 @end
