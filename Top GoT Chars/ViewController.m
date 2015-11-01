@@ -23,8 +23,9 @@
     category = @"Characters";
     limit = 75;
 
+    loadingDataQueue = [[NSOperationQueue alloc] init];
     loadingThumbnailsQueue = [[NSOperationQueue alloc] init];
-    //loadingThumbnailsQueue.maxConcurrentOperationCount = 10;
+    //loadingDataQueue.maxConcurrentOperationCount = 10;
     
     topTitles = [[NSMutableArray alloc] init];
     topAbstracts = [[NSMutableArray alloc] init];
@@ -102,7 +103,7 @@
         //NSLog(@"Top Titles %@",topTitles);
     }] resume];
     
-    [loadingThumbnailsQueue addOperationWithBlock: ^ {
+    [loadingDataQueue addOperationWithBlock: ^ {
         while(!jsonData){
             usleep(200000);
         }
@@ -119,12 +120,12 @@
             
             if(url == [NSNull null]){
                 [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
-                [mainTableView reloadData];
+                [mainTableView reloadData]; 
                 
             }else{
                 //NSLog(@"%lu",(unsigned long)[url length]);
                 usleep(i*600);
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+                [loadingThumbnailsQueue addOperationWithBlock: ^ {
                     NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
                     if ( imageData == nil )
                         return;
@@ -133,25 +134,29 @@
                         UIImage *image = [UIImage imageWithData:imageData];
                         //[topThumbnails addObject:image];
                         [topThumbnails replaceObjectAtIndex:i withObject:image];
-                        //if (!(i%4) || i == limit-1) {
+                        if (!(i%3)) {
+                            NSLog(@"i %i", i);
+                        [mainTableView reloadData]; }
                         //NSLog(@"i jest %i",i);
-                        //usleep(i*500);
-                        [mainTableView reloadData];
-                        //                    [mainTableView beginUpdates];
-                        //                    [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:i inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
-                        //                    [mainTableView endUpdates];
+                        //usleep(arc4random_uniform(50000));
+                       
+//                                            [mainTableView beginUpdates];
+//                                            [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:i inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
+//                                            [mainTableView endUpdates];
                         //}
                         
                     });
-                });
+                }];
             }
-            [mainTableView reloadData];
+            //[mainTableView reloadData]; 
             
             // [topThumbnails  addObject:image];
             //NSLog(@"%@",[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"]);
         }
         
     }];
+    [loadingDataQueue addOperationWithBlock: ^ {
+        [mainTableView reloadData]; }];
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW,0), ^{
     //});
     //wsadź spowrotem do urlsession
@@ -178,10 +183,26 @@
 }
 
 - (void)refreshPull{
+    [loadingDataQueue cancelAllOperations];
     [loadingThumbnailsQueue cancelAllOperations];
     [self initDefaultValues:NO];
-    [mainTableView reloadData];
-    [self downloadData:limit inCategory:category];
+    [mainTableView reloadData]; 
+    bool success = NO;
+    bool isAvailable = NO;
+    const char *host_name = [@"http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki"
+                             cStringUsingEncoding:NSASCIIStringEncoding];
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,host_name);
+    SCNetworkReachabilityFlags flags;
+    success = SCNetworkReachabilityGetFlags(reachability, &flags);
+    isAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
+   if(isAvailable){
+       [self downloadData:limit inCategory:category];
+   }else{
+       [self initDefaultValues:YES];
+       [mainTableView reloadData];
+       [self showErrorMessage];
+   }
     [self.refreshControl endRefreshing];
 }
 

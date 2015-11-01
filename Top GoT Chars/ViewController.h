@@ -19,6 +19,8 @@
     NSString *category;
     int limit;
     NSOperationQueue *loadingThumbnailsQueue;
+    NSOperationQueue *loadingDataQueue;
+    //NSInteger refreshCount;
 }
 
 @end
