@@ -126,7 +126,7 @@
                 
             }else{
                 //NSLog(@"%lu",(unsigned long)[url length]);
-                usleep(i*60);
+                usleep(i*500);
 ///////////////////////////////////////////////////////////////////////////////////////////////
                 __block __weak NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
                     
@@ -138,8 +138,8 @@
                                 
                                 UIImage *image = [UIImage imageWithData:imageData];
                                 [topThumbnails replaceObjectAtIndex:i withObject:image];
-                                if (!(i%3)) {
-                                    [mainTableView reloadData]; }
+                                //if (!(i%3)) {
+                                    [mainTableView reloadData]; //}
                                 
                             });
                         }
