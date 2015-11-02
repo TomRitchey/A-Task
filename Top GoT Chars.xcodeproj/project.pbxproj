@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A71598991BE39A200065EA7F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A71598981BE39A200065EA7F /* SystemConfiguration.framework */; };
+		A73D8D311BE77CDD00B21FDF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = A73D8D301BE77CCC00B21FDF /* .gitignore */; };
 		A7BFB5CE1BE3C3390082C3CB /* Huse of Stork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */; };
 		A7BFB5D21BE3C8B70082C3CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */; };
 		A7FDA34F1BE2C4610044F519 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA34E1BE2C4610044F519 /* main.m */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		A71598981BE39A200065EA7F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		A73D8D301BE77CCC00B21FDF /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Huse of Stork@3x.png"; sourceTree = "<group>"; };
 		A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7FDA34A1BE2C4610044F519 /* Top GoT Chars.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Top GoT Chars.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +117,7 @@
 				A7FDA3511BE2C4610044F519 /* AppDelegate.m */,
 				A7FDA3531BE2C4610044F519 /* ViewController.h */,
 				A7FDA3541BE2C4610044F519 /* ViewController.m */,
+				A73D8D301BE77CCC00B21FDF /* .gitignore */,
 				A7FDA3561BE2C4610044F519 /* Main.storyboard */,
 				A7FDA35B1BE2C4610044F519 /* LaunchScreen.storyboard */,
 				A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */,
@@ -260,6 +263,7 @@
 				A7FDA35D1BE2C4610044F519 /* LaunchScreen.storyboard in Resources */,
 				A7FDA3811BE2F6FD0044F519 /* mala pizza.png in Resources */,
 				A7BFB5D21BE3C8B70082C3CB /* Assets.xcassets in Resources */,
+				A73D8D311BE77CDD00B21FDF /* .gitignore in Resources */,
 				A7FDA3581BE2C4610044F519 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
