@@ -24,9 +24,10 @@
     
     
     NSString *category = @"category";
-    int limit = 10;
+    int limit = 75;
     for (int i = 0; i<limit; i++) {
         [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
+        [topAbstracts  addObject:[NSString stringWithFormat:@"No Connection"]];
     }
     
     NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",category,limit];
@@ -38,37 +39,20 @@
 
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        //NSString *requestReply = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        //NSLog(@"requestReply: %@", requestReply);
         
         //id object = [NSJSONSerialization JSONObjectWithData:returnedData options:0 error:&error];
         
         id jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        
-//        if([jsonData isKindOfClass:[NSDictionary class]])
-//        {
-//            NSLog(@"tak jest dobry");
-//            //NSDictionary *results = json;
-//        }else{
-//            NSLog(@"Nie jest dobry");
-//        }
-        
-        //NSLog(@"Full data %@",json);
-        
+
         [topTitles removeAllObjects];
+        [topAbstracts removeAllObjects];
+        
         for(int i=0;i<limit;i++){
         [topTitles  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
         [topAbstracts  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
         }
-        
-        
-        NSLog(@"Top Titles %@",topTitles);
-        
-        
+
     }] resume];
-    
- 
-    
     
 }
 
@@ -89,10 +73,11 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
     }
     
     cell.textLabel.text = [topTitles objectAtIndex:indexPath.row];
+    cell.detailTextLabel.text = [topAbstracts objectAtIndex:indexPath.row];
     return cell;
 }
 @end
