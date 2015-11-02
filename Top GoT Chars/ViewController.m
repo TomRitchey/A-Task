@@ -10,11 +10,20 @@
 
 @interface ViewController ()
 
-
 @end
 
 @implementation ViewController
 
+@synthesize jsonData;
+@synthesize topTitles;
+@synthesize topAbstracts;
+@synthesize topThumbnails;
+@synthesize topUrls;
+@synthesize mainTableView;
+@synthesize category;
+@synthesize limit;
+@synthesize loadingThumbnailsQueue;
+@synthesize loadingDataQueue;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -24,11 +33,14 @@
 
     loadingDataQueue = [[NSOperationQueue alloc] init];
     loadingThumbnailsQueue = [[NSOperationQueue alloc] init];
+    loadingThumbnailsQueue.maxConcurrentOperationCount = 30;
     
     topTitles = [[NSMutableArray alloc] init];
     topAbstracts = [[NSMutableArray alloc] init];
     topThumbnails = [[NSMutableArray alloc] init];
     topUrls = [[NSMutableArray alloc] init];
+    
+    self.Timer = [NSTimer timerWithTimeInterval:1.5 target:self selector:@selector(canLoadData) userInfo: nil repeats: YES];
     
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
@@ -64,7 +76,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Networking
+
 - (void)downloadData:(int)dataLimit inCategory:(NSString*)dataCategory {
+    loadingDataAllowed = NO;
+    [self.Timer fire];
     
     NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",dataCategory,dataLimit];
     
@@ -110,12 +126,13 @@
                 
             }else{
                 //NSLog(@"%lu",(unsigned long)[url length]);
-                usleep(i*600);
+                usleep(i*60);
 ///////////////////////////////////////////////////////////////////////////////////////////////
-                __block NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+                __block __weak NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
                     
                         NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-                      
+                    if([operation isCancelled]) return;
+                    
                         if(imageData!=nil && ![operation isCancelled]){
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 
@@ -162,6 +179,11 @@
     //NSLog(@"session closed");
 }
 
+-(void)canLoadData{
+    loadingDataAllowed = YES;
+    //NSLog(@"can load now");
+}
+
 - (bool)checkIfNetworkAwaliable{
     bool success = NO;
     bool isAvailable = NO;
@@ -198,14 +220,20 @@
     [loadingDataQueue cancelAllOperations];
     [loadingThumbnailsQueue cancelAllOperations];
     
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//    });
     [self initDefaultValues:NO];
     [mainTableView reloadData]; 
-
+    //NSLog(@"Data loading request");
    if([self checkIfNetworkAwaliable]){
-        usleep(500);
-       [self downloadData:limit inCategory:category];
+       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+           //usleep(500000);
+           while (!loadingDataAllowed) {
+               usleep(50000);
+               //NSLog(@"waiting");
+           }
+           [loadingThumbnailsQueue waitUntilAllOperationsAreFinished];
+           [self downloadData:limit inCategory:category];
+          // NSLog(@"Data loading");
+       });
    }else{
        //[self initDefaultValues:YES];
        [mainTableView reloadData];
@@ -248,7 +276,7 @@
         CGPoint point = [tap locationInView:tap.view];
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
         //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        if([[topTitles objectAtIndex:1]  isEqual: @"Refreshing..."]){
+        if(![[topTitles objectAtIndex:1]  isEqual: @"Refreshing..."]){
             if([[topUrls objectAtIndex:indexPath.row]isEqualToString:@"empty"]){
                 [self showErrorMessage];
             }else{

@@ -11,17 +11,19 @@
 
 @interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 {
-    id jsonData;
-    NSMutableArray *topTitles;
-    NSMutableArray *topAbstracts;
-    NSMutableArray *topThumbnails;
-    NSMutableArray *topUrls;
-    IBOutlet UITableView *mainTableView;
-    NSString *category;
-    int limit;
-    NSOperationQueue *loadingThumbnailsQueue;
-    NSOperationQueue *loadingDataQueue;
+    bool loadingDataAllowed;
 }
+    @property id jsonData;
+    @property NSMutableArray *topTitles;
+    @property NSMutableArray *topAbstracts;
+    @property NSMutableArray *topThumbnails;
+    @property NSMutableArray *topUrls;
+    @property IBOutlet UITableView *mainTableView;
+    @property NSString *category;
+    @property int limit;
+    @property NSOperationQueue *loadingThumbnailsQueue;
+    @property NSOperationQueue *loadingDataQueue;
+    @property NSTimer *Timer;
 
 @end
 
