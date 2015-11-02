@@ -276,7 +276,7 @@
         CGPoint point = [tap locationInView:tap.view];
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
         //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        if(![[topTitles objectAtIndex:1]  isEqual: @"Refreshing..."]){
+        if(![[topTitles objectAtIndex:indexPath.row]  isEqual: @"Refreshing..."]){
             if([[topUrls objectAtIndex:indexPath.row]isEqualToString:@"empty"]){
                 [self showErrorMessage];
             }else{
