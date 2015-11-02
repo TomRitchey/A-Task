@@ -24,6 +24,9 @@
 @synthesize limit;
 @synthesize loadingThumbnailsQueue;
 @synthesize loadingDataQueue;
+@synthesize loadingDataAllowed;
+
+int counterr;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,6 +43,7 @@
     topThumbnails = [[NSMutableArray alloc] init];
     topUrls = [[NSMutableArray alloc] init];
     
+    loadingDataAllowed = YES;
     self.Timer = [NSTimer timerWithTimeInterval:1.5 target:self selector:@selector(canLoadData) userInfo: nil repeats: YES];
     
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
@@ -99,12 +103,14 @@
 - (void)downloadData:(int)dataLimit inCategory:(NSString*)dataCategory {
     loadingDataAllowed = NO;
     [self.Timer fire];
-    
+    //NSLog(@"allowed  %i for %i time", loadingDataAllowed, counterr);counterr++;
     NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",dataCategory,dataLimit];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:baseUrl]];
     [request setHTTPMethod:@"GET"];
+    
+    
     
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -122,20 +128,33 @@
         }
         //NSLog(@"Top Titles %@",topTitles);
     }] resume];
-    
-    [loadingDataQueue addOperationWithBlock: ^ {
+    //[loadingDataQueue addOperationWithBlock: ^ {
+    //NSLog(@"outside block");
+    __block NSBlockOperation *downloadDataOperation = [NSBlockOperation blockOperationWithBlock:^{
+        //NSLog(@"inside block");
         while(!jsonData){
             usleep(200000);
+            if([downloadDataOperation isCancelled]) return;
         }
         //NSLog(@"%@",jsonData);
+        
+        if([downloadDataOperation isCancelled]) return;
         for(int i=0;i<limit;i++){
-            [topTitles  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
-            [topAbstracts  replaceObjectAtIndex:i withObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
+            NSObject *tempTitle =[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"];
+            if([downloadDataOperation isCancelled]) return;
+            [topTitles  replaceObjectAtIndex:i withObject:tempTitle];
+            NSObject *tempItem = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"];
+            if([downloadDataOperation isCancelled]) return;
+            [topAbstracts  replaceObjectAtIndex:i withObject:tempItem];
         
             //NSLog(@"before %@",[topUrls objectAtIndex:i]);
-            [topUrls   replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]]];
+            NSObject *tempUrl = [NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]];
+            if([downloadDataOperation isCancelled]) return;
+            [topUrls   replaceObjectAtIndex:i withObject:tempUrl];
             
             NSString *urlThumbnail = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
+            
+            if([downloadDataOperation isCancelled]) return;
             
             if(urlThumbnail == [NSNull null]){
                 [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
@@ -144,12 +163,14 @@
                 //NSLog(@"%lu",(unsigned long)[url length]);
                 usleep(i*500);
 ///////////////////////////////////////////////////////////////////////////////////////////////
-                __block __weak NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+                if([downloadDataOperation isCancelled]) return;
+                
+                __block __weak NSBlockOperation *downloadImageOperation = [NSBlockOperation blockOperationWithBlock:^{
                     
                         NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlThumbnail]];
-                    if([operation isCancelled]) return;
+                    if([downloadImageOperation isCancelled]) return;
                     
-                        if(imageData!=nil && ![operation isCancelled]){
+                        if(imageData!=nil && ![downloadImageOperation isCancelled]){
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 
                                 UIImage *image = [UIImage imageWithData:imageData];
@@ -163,7 +184,7 @@
                     
                     }];
                
-                    [loadingThumbnailsQueue addOperation:operation];
+                    [loadingThumbnailsQueue addOperation:downloadImageOperation];
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                [loadingThumbnailsQueue addOperationWithBlock: ^ {
@@ -190,15 +211,13 @@
         }
         
     }];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
-    [mainTableView reloadData];});
-
+    
+    [loadingDataQueue addOperation:downloadDataOperation];
+    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+//    [mainTableView reloadData];});
+    
     //NSLog(@"session closed");
-}
-
--(void)canLoadData{
-    loadingDataAllowed = YES;
-    //NSLog(@"can load now");
 }
 
 - (bool)checkIfNetworkAwaliable{
@@ -213,7 +232,6 @@
         isAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
     return isAvailable;
 }
-
 
 - (void)goToCharacterSite:(UISwipeGestureRecognizer*)tap {
     
@@ -232,6 +250,10 @@
     }
 }
 
+-(void)canLoadData{
+    loadingDataAllowed = YES;
+    //NSLog(@"can load now");
+}
 #pragma mark Handling user input
 
 - (void)doubleTap:(UISwipeGestureRecognizer*)tap {
@@ -251,13 +273,20 @@
     [mainTableView reloadData];
     //NSLog(@"Data loading request");
    if([self checkIfNetworkAwaliable]){
-       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
            //usleep(500000);
+//           if ([self.Timer isValid]) {
+//               NSLog(@"allowed %i", loadingDataAllowed);
+//           }else{
+//               
+//               NSLog(@"not allowed");
+//           }
            while (!loadingDataAllowed) {
                usleep(50000);
                NSLog(@"waiting");
            }
            [loadingThumbnailsQueue waitUntilAllOperationsAreFinished];
+           [loadingDataQueue waitUntilAllOperationsAreFinished];
            [self downloadData:limit inCategory:category];
           // NSLog(@"Data loading");
        });

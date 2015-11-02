@@ -10,9 +10,8 @@
 #import <SystemConfiguration/SCNetworkReachability.h>
 
 @interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
-{
-    bool loadingDataAllowed;
-}
+
+    @property bool loadingDataAllowed;
     @property id jsonData;
     @property NSMutableArray *topTitles;
     @property NSMutableArray *topAbstracts;
