@@ -368,8 +368,8 @@ int counterr;
 #pragma mark Others
 
 - (void)showErrorMessage {
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedString(@"No connection",nil)]
-                                                                   message:[NSString stringWithFormat:NSLocalizedString(@"Check your internet connection or try again later.",nil)]
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Connection",nil)
+                                                            message:[NSString stringWithFormat:NSLocalizedString(@"Check your internet connection or try again later.",nil)]
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Dismiss",nil)]
