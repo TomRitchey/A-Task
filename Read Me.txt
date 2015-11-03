@@ -1,0 +1,3 @@
+Pull list to refresh.
+
+Double tap or longpress to go to article.
