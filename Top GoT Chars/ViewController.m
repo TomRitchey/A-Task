@@ -43,7 +43,8 @@
         // NSLog(@"siec dostepna");
         usleep(30000);
         [self downloadData:limit inCategory:category];
-        [mainTableView reloadData];
+        
+        
     });
     
 }
@@ -81,14 +82,20 @@
         
         id jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
         
-        [topTitles removeAllObjects];
-        [topAbstracts removeAllObjects];
+        //[topTitles removeAllObjects];
+        //[topAbstracts removeAllObjects];
         
         for(int i=0;i<dataLimit;i++){
-            [topTitles  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
-            [topAbstracts  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
-            [mainTableView reloadData];
+            //[topTitles  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
+            //[topAbstracts  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
+            NSObject *tempTitle =[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"];
+            [topTitles  replaceObjectAtIndex:i withObject:tempTitle];
+            NSObject *tempItem = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"];
+            [topAbstracts  replaceObjectAtIndex:i withObject:tempItem];
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [mainTableView reloadData];
+        });
         
     }] resume];
 }
