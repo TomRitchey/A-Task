@@ -81,17 +81,19 @@ int counterr;
 }
 
 - (void)initDefaultValues:(bool)defaultValues{
+    NSString *loremIpsum = @"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.";
+    
     if(!defaultValues){
         for (int i = 0; i<limit; i++) {
             [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"Refreshing..."]];
-            [topAbstracts  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."]];
+            [topAbstracts  replaceObjectAtIndex:i withObject:loremIpsum];
             [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
             [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
         }
     }else{
         for (int i = 0; i<limit; i++) {
             [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
-            [topAbstracts  addObject:[NSString stringWithFormat:@"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."]];
+            [topAbstracts  addObject:loremIpsum];
             [topUrls addObject:[NSString stringWithFormat:@"empty"]];
             [topThumbnails addObject:[self genereteBlankImage]];
         }
@@ -140,21 +142,21 @@ int counterr;
         
         if([downloadDataOperation isCancelled]) return;
         for(int i=0;i<limit;i++){
+           
+            if([downloadDataOperation isCancelled]) return;
             NSObject *tempTitle =[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"];
-            if([downloadDataOperation isCancelled]) return;
             [topTitles  replaceObjectAtIndex:i withObject:tempTitle];
+            
+            if([downloadDataOperation isCancelled]) return;
             NSObject *tempItem = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"];
-            if([downloadDataOperation isCancelled]) return;
             [topAbstracts  replaceObjectAtIndex:i withObject:tempItem];
-        
-            //NSLog(@"before %@",[topUrls objectAtIndex:i]);
-            NSObject *tempUrl = [NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]];
+    
             if([downloadDataOperation isCancelled]) return;
+            NSObject *tempUrl = [NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]];
             [topUrls   replaceObjectAtIndex:i withObject:tempUrl];
             
-            NSString *urlThumbnail = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
-            
             if([downloadDataOperation isCancelled]) return;
+            NSString *urlThumbnail = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
             
             if(urlThumbnail == [NSNull null]){
                 [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
@@ -168,12 +170,14 @@ int counterr;
                 __block __weak NSBlockOperation *downloadImageOperation = [NSBlockOperation blockOperationWithBlock:^{
                     
                         NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlThumbnail]];
-                    if([downloadImageOperation isCancelled]) return;
-                    
+                    if([downloadImageOperation isCancelled]){//NSLog(@"canceled %i",i);
+                        return;}
+                    //NSLog(@"not canceled %i",i);
                         if(imageData!=nil && ![downloadImageOperation isCancelled]){
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 
                                 UIImage *image = [UIImage imageWithData:imageData];
+                                if([downloadImageOperation isCancelled]){return;}
                                 [topThumbnails replaceObjectAtIndex:i withObject:image];
                                 //if (!(i%3)) {
                                 [mainTableView reloadData]; //}
@@ -204,10 +208,6 @@ int counterr;
 ///////////////////////////////////////////////////////////////////////////////////////////////
                 
             }
-            //[mainTableView reloadData]; 
-            
-            // [topThumbnails  addObject:image];
-            //NSLog(@"%@",[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"]);
         }
         
     }];
@@ -217,7 +217,7 @@ int counterr;
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
 //    [mainTableView reloadData];});
     
-    //NSLog(@"session closed");
+
 }
 
 - (bool)checkIfNetworkAwaliable{
@@ -285,14 +285,16 @@ int counterr;
                usleep(50000);
                NSLog(@"waiting");
            }
-           [loadingThumbnailsQueue waitUntilAllOperationsAreFinished];
-           [loadingDataQueue waitUntilAllOperationsAreFinished];
+           //NSLog(@"waitining for cancelation starts");
+           //[loadingThumbnailsQueue waitUntilAllOperationsAreFinished];
+           //[loadingDataQueue waitUntilAllOperationsAreFinished];
+           //NSLog(@"refresh download begin %i",counterr); counterr++;
            [self downloadData:limit inCategory:category];
           // NSLog(@"Data loading");
        });
    }else{
        //[self initDefaultValues:YES];
-       [mainTableView reloadData];
+       //[mainTableView reloadData];
        [self showErrorMessage];
    }
     [self.refreshControl endRefreshing];
