@@ -26,10 +26,13 @@
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="sCN-JD-NeR" id="s22-3p-wEr"/>
-                            <outlet property="delegate" destination="sCN-JD-NeR" id="PoH-Eh-ccr"/>
+                            <outlet property="dataSource" destination="sCN-JD-NeR" id="RQh-iY-XTH"/>
+                            <outlet property="delegate" destination="sCN-JD-NeR" id="XWV-IT-wb0"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="mainTableView" destination="nXA-Ti-0J5" id="3iE-wa-9ZN"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uEo-ol-Ymh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

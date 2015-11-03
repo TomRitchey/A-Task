@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A748FE661BE8B1E7005A73DD /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = A748FE651BE8B1E7005A73DD /* .gitignore */; };
 		A7FDA34F1BE2C4610044F519 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA34E1BE2C4610044F519 /* main.m */; };
 		A7FDA3521BE2C4610044F519 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3511BE2C4610044F519 /* AppDelegate.m */; };
 		A7FDA3551BE2C4610044F519 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3541BE2C4610044F519 /* ViewController.m */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A748FE651BE8B1E7005A73DD /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		A7FDA34A1BE2C4610044F519 /* Top GoT Chars.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Top GoT Chars.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7FDA34E1BE2C4610044F519 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A7FDA3501BE2C4610044F519 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				A7FDA3531BE2C4610044F519 /* ViewController.h */,
 				A7FDA3541BE2C4610044F519 /* ViewController.m */,
 				A7FDA3561BE2C4610044F519 /* Main.storyboard */,
+				A748FE651BE8B1E7005A73DD /* .gitignore */,
 				A7FDA3591BE2C4610044F519 /* Assets.xcassets */,
 				A7FDA35B1BE2C4610044F519 /* LaunchScreen.storyboard */,
 				A7FDA35E1BE2C4610044F519 /* Info.plist */,
@@ -246,6 +249,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A748FE661BE8B1E7005A73DD /* .gitignore in Resources */,
 				A7FDA35D1BE2C4610044F519 /* LaunchScreen.storyboard in Resources */,
 				A7FDA35A1BE2C4610044F519 /* Assets.xcassets in Resources */,
 				A7FDA3581BE2C4610044F519 /* Main.storyboard in Resources */,
@@ -503,6 +507,7 @@
 				A7FDA3791BE2C4620044F519 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A7FDA37A1BE2C4620044F519 /* Build configuration list for PBXNativeTarget "Top GoT CharsTests" */ = {
 			isa = XCConfigurationList;
@@ -511,6 +516,7 @@
 				A7FDA37C1BE2C4620044F519 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A7FDA37D1BE2C4620044F519 /* Build configuration list for PBXNativeTarget "Top GoT CharsUITests" */ = {
 			isa = XCConfigurationList;
@@ -519,6 +525,7 @@
 				A7FDA37F1BE2C4620044F519 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

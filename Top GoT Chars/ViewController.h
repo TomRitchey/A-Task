@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SystemConfiguration/SCNetworkReachability.h>
 
 @interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
-{
-    NSMutableArray* topTitles;
-    NSMutableArray* topAbstracts;
-}
+
+@property    NSMutableArray* topTitles;
+@property    NSMutableArray* topAbstracts;
+@property (strong, nonatomic) IBOutlet UITableView *mainTableView;
+
 
 @end
 

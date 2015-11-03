@@ -14,6 +14,9 @@
 @end
 
 @implementation ViewController
+@synthesize topAbstracts;
+@synthesize topTitles;
+@synthesize mainTableView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -30,35 +33,64 @@
         [topAbstracts  addObject:[NSString stringWithFormat:@"No Connection"]];
     }
     
-    NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",category,limit];
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:baseUrl]];
-    [request setHTTPMethod:@"GET"];
-    
-
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
         
-        //id object = [NSJSONSerialization JSONObjectWithData:returnedData options:0 error:&error];
-        
-        id jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-
-        [topTitles removeAllObjects];
-        [topAbstracts removeAllObjects];
-        
-        for(int i=0;i<limit;i++){
-        [topTitles  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
-        [topAbstracts  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
+        while(![self checkIfNetworkAwaliable]){
+            usleep(1000000);
         }
-
-    }] resume];
+        // NSLog(@"siec dostepna");
+        usleep(30000);
+        [self downloadData:limit inCategory:category];
+        [mainTableView reloadData];
+    });
     
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (bool)checkIfNetworkAwaliable{
+    bool success = NO;
+    bool isAvailable = NO;
+    const char *host_name = [@"http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki"
+                             cStringUsingEncoding:NSASCIIStringEncoding];
+    
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,host_name);
+    SCNetworkReachabilityFlags flags;
+    success = SCNetworkReachabilityGetFlags(reachability, &flags);
+    isAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
+    return isAvailable;
+}
+
+- (void)downloadData:(int)dataLimit inCategory:(NSString*)dataCategory {
+    NSString *baseUrl=[NSString stringWithFormat:@"http://gameofthrones.wikia.com/api/v1/Articles/Top?expand=1&category=%@&limit=%i",dataCategory,dataLimit];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:baseUrl]];
+    [request setHTTPMethod:@"GET"];
+    
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        //id object = [NSJSONSerialization JSONObjectWithData:returnedData options:0 error:&error];
+        
+        id jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        
+        [topTitles removeAllObjects];
+        [topAbstracts removeAllObjects];
+        
+        for(int i=0;i<dataLimit;i++){
+            [topTitles  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"title"]];
+            [topAbstracts  addObject:[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"abstract"]];
+            [mainTableView reloadData];
+        }
+        
+    }] resume];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
