@@ -368,7 +368,7 @@ int counterr;
 #pragma mark Others
 
 - (void)showErrorMessage {
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"No connection"
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedString(@"No connection",nil)]
                                                                    message:[NSString stringWithFormat:NSLocalizedString(@"Check your internet connection or try again later.",nil)]
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
@@ -384,7 +384,7 @@ int counterr;
 
 - (void)showMessage:(NSInteger)index {
     UIAlertController *alertController = [UIAlertController
-                                          alertControllerWithTitle:[NSString  stringWithFormat:[NSString stringWithFormat:NSLocalizedString(@"Do you want to visit page about %@?",nil)],[topTitles objectAtIndex:index]]
+                                          alertControllerWithTitle:[NSString  stringWithFormat:[NSString stringWithFormat:NSLocalizedString(@"Do you want to visit page about %@?",nil),[topTitles objectAtIndex:index]]]
                                           message:[NSString stringWithFormat:NSLocalizedString(@"Tap OK to go to Safari.",nil)]
                                           preferredStyle:UIAlertControllerStyleAlert];
     
