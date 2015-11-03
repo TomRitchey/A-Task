@@ -80,23 +80,49 @@ int counterr;
     // Dispose of any resources that can be recreated.
 }
 
-- (void)initDefaultValues:(bool)defaultValues{
+- (void)initDefaultValues:(int)defaultValues{
     NSString *loremIpsum = @"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.";
     
-    if(!defaultValues){
-        for (int i = 0; i<limit; i++) {
-            [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"Refreshing..."]];
-            [topAbstracts  replaceObjectAtIndex:i withObject:loremIpsum];
-            [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
-            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
-        }
-    }else{
-        for (int i = 0; i<limit; i++) {
-            [topTitles  addObject:[NSString stringWithFormat:@"No Connection"]];
-            [topAbstracts  addObject:loremIpsum];
-            [topUrls addObject:[NSString stringWithFormat:@"empty"]];
-            [topThumbnails addObject:[self genereteBlankImage]];
-        }
+//    if(!defaultValues){
+//        for (int i = 0; i<limit; i++) {
+//            [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]];
+//            [topAbstracts  replaceObjectAtIndex:i withObject:loremIpsum];
+//            [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
+//            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+//        }
+//    }else{
+//        for (int i = 0; i<limit; i++) {
+//            [topTitles  addObject:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]];
+//            [topAbstracts  addObject:loremIpsum];
+//            [topUrls addObject:[NSString stringWithFormat:@"empty"]];
+//            [topThumbnails addObject:[self genereteBlankImage]];
+//        }
+//    }
+    switch (defaultValues) {
+        case 0:
+            for (int i = 0; i<limit; i++) {
+                [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]];
+                [topAbstracts  replaceObjectAtIndex:i withObject:loremIpsum];
+                [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
+                [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+            }
+            break;
+        case 1:
+            for (int i = 0; i<limit; i++) {
+                [topTitles  addObject:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]];
+                [topAbstracts  addObject:loremIpsum];
+                [topUrls addObject:[NSString stringWithFormat:@"empty"]];
+                [topThumbnails addObject:[self genereteBlankImage]];
+            }
+            break;
+            
+        case 2:
+            for (int i = 0; i<limit; i++) {
+                [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]];
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -154,6 +180,10 @@ int counterr;
             if([downloadDataOperation isCancelled]) return;
             NSObject *tempUrl = [NSString stringWithFormat:@"%@%@",[jsonData valueForKey:@"basepath"],[[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"url"]];
             [topUrls   replaceObjectAtIndex:i withObject:tempUrl];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [mainTableView reloadData]; 
+            });
             
             if([downloadDataOperation isCancelled]) return;
             NSString *urlThumbnail = [[[jsonData objectForKey:@"items"] objectAtIndex: i] valueForKey:@"thumbnail"];
@@ -240,7 +270,7 @@ int counterr;
         CGPoint point = [tap locationInView:tap.view];
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
         //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        if(![[topTitles objectAtIndex:indexPath.row]  isEqual: @"Refreshing..."]){
+        if(![[topTitles objectAtIndex:indexPath.row]  isEqual:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]]){
             if([[topUrls objectAtIndex:indexPath.row]isEqualToString:@"empty"]){
                 [self showErrorMessage];
             }else{
@@ -272,8 +302,16 @@ int counterr;
     [self initDefaultValues:NO];
     [mainTableView reloadData];
     //NSLog(@"Data loading request");
-   if([self checkIfNetworkAwaliable]){
-       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    int count = 0;
+    while (![self checkIfNetworkAwaliable] && count < 6) {
+        usleep(250000);
+        count ++;
+//        NSLog(@"count %d",count);
+    }
+    
+        if([self checkIfNetworkAwaliable]){
            //usleep(500000);
 //           if ([self.Timer isValid]) {
 //               NSLog(@"allowed %i", loadingDataAllowed);
@@ -281,22 +319,25 @@ int counterr;
 //               
 //               NSLog(@"not allowed");
 //           }
-           while (!loadingDataAllowed) {
-               usleep(50000);
-               NSLog(@"waiting");
-           }
+            while (!loadingDataAllowed) {
+                usleep(50000);
+                NSLog(@"waiting");
+            }
            //NSLog(@"waitining for cancelation starts");
            //[loadingThumbnailsQueue waitUntilAllOperationsAreFinished];
            //[loadingDataQueue waitUntilAllOperationsAreFinished];
            //NSLog(@"refresh download begin %i",counterr); counterr++;
-           [self downloadData:limit inCategory:category];
+            [self downloadData:limit inCategory:category];
           // NSLog(@"Data loading");
-       });
-   }else{
-       //[self initDefaultValues:YES];
-       //[mainTableView reloadData];
-       [self showErrorMessage];
-   }
+       
+        }else{
+            [self showErrorMessage];
+            [self initDefaultValues:2];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [mainTableView reloadData];
+            });
+        }
+    });
     [self.refreshControl endRefreshing];
 }
 
@@ -328,10 +369,10 @@ int counterr;
 
 - (void)showErrorMessage {
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"No connection"
-                                                            message:@"Check your internet connection or try again later."
+                                                                   message:[NSString stringWithFormat:NSLocalizedString(@"Check your internet connection or try again later.",nil)]
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:@"Dismiss"
+    UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Dismiss",nil)]
                                                             style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * action) {}];
     
@@ -343,12 +384,12 @@ int counterr;
 
 - (void)showMessage:(NSInteger)index {
     UIAlertController *alertController = [UIAlertController
-                                          alertControllerWithTitle:[NSString  stringWithFormat:@"Do you want to visit page about %@?",[topTitles objectAtIndex:index]]
-                                          message:@"Tap OK to go to Safari."
+                                          alertControllerWithTitle:[NSString  stringWithFormat:[NSString stringWithFormat:NSLocalizedString(@"Do you want to visit page about %@?",nil)],[topTitles objectAtIndex:index]]
+                                          message:[NSString stringWithFormat:NSLocalizedString(@"Tap OK to go to Safari.",nil)]
                                           preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *cancelAction = [UIAlertAction
-                                   actionWithTitle:@"Cancel"
+                                   actionWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Cancel",nil)]
                                    style:UIAlertActionStyleCancel
                                    handler:^(UIAlertAction *action)
                                    {
@@ -356,7 +397,7 @@ int counterr;
                                    }];
     
     UIAlertAction *okAction = [UIAlertAction
-                               actionWithTitle:@"OK"
+                               actionWithTitle:[NSString stringWithFormat:NSLocalizedString(@"OK",nil)]
                                style:UIAlertActionStyleDefault
                                handler:^(UIAlertAction *action)
                                {

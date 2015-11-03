@@ -1,0 +1,14 @@
+/* 
+  Dictionary.strings
+  Top GoT Chars
+
+  Created by Kacper Augustyniak on 03.11.2015.
+  Copyright © 2015 Kacper Augustyniak. All rights reserved.
+*/
+"Refreshing..." = "Refreshing...";
+"No Connection" = "No Connection";
+"Tap OK to go to Safari." = "Tap OK to go to Safari.";
+"Do you want to visit page about %@?" = "Do you want to visit page about %@?";
+"Cancel" = "Cancel";
+"OK" = "OK";
+"Check your internet connection or try again later." = "Check your internet connection or try again later.";

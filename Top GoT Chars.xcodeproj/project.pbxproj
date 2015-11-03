@@ -12,6 +12,7 @@
 		A748FE681BE8BAE6005A73DD /* Read Me.txt in Resources */ = {isa = PBXBuildFile; fileRef = A748FE671BE8BAE6005A73DD /* Read Me.txt */; };
 		A7BFB5CE1BE3C3390082C3CB /* Huse of Stork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */; };
 		A7BFB5D21BE3C8B70082C3CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */; };
+		A7E7EB171BE9035B004F6FDB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A7E7EB191BE9035B004F6FDB /* Localizable.strings */; };
 		A7FDA34F1BE2C4610044F519 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA34E1BE2C4610044F519 /* main.m */; };
 		A7FDA3521BE2C4610044F519 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3511BE2C4610044F519 /* AppDelegate.m */; };
 		A7FDA3551BE2C4610044F519 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7FDA3541BE2C4610044F519 /* ViewController.m */; };
@@ -45,6 +46,10 @@
 		A748FE671BE8BAE6005A73DD /* Read Me.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Read Me.txt"; sourceTree = "<group>"; };
 		A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Huse of Stork@3x.png"; sourceTree = "<group>"; };
 		A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A7E7EB151BE901FA004F6FDB /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Main.strings; sourceTree = "<group>"; };
+		A7E7EB161BE901FA004F6FDB /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		A7E7EB181BE9035B004F6FDB /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A7E7EB1C1BE904FA004F6FDB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A7FDA34A1BE2C4610044F519 /* Top GoT Chars.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Top GoT Chars.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7FDA34E1BE2C4610044F519 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A7FDA3501BE2C4610044F519 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -60,7 +65,7 @@
 		A7FDA36E1BE2C4620044F519 /* Top GoT CharsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Top GoT CharsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7FDA3721BE2C4620044F519 /* Top_GoT_CharsUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Top_GoT_CharsUITests.m; sourceTree = "<group>"; };
 		A7FDA3741BE2C4620044F519 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A7FDA3801BE2F6FB0044F519 /* mala pizza.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mala pizza.png"; sourceTree = "<group>"; };
+		A7FDA3801BE2F6FB0044F519 /* mala pizza.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "mala pizza.png"; path = "Top GoT Chars/mala pizza.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +98,9 @@
 			isa = PBXGroup;
 			children = (
 				A748FE671BE8BAE6005A73DD /* Read Me.txt */,
+				A7E7EB191BE9035B004F6FDB /* Localizable.strings */,
 				A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */,
+				A7FDA3801BE2F6FB0044F519 /* mala pizza.png */,
 				A71598981BE39A200065EA7F /* SystemConfiguration.framework */,
 				A7FDA34C1BE2C4610044F519 /* Top GoT Chars */,
 				A7FDA3661BE2C4620044F519 /* Top GoT CharsTests */,
@@ -115,7 +122,6 @@
 		A7FDA34C1BE2C4610044F519 /* Top GoT Chars */ = {
 			isa = PBXGroup;
 			children = (
-				A7FDA3801BE2F6FB0044F519 /* mala pizza.png */,
 				A7FDA3501BE2C4610044F519 /* AppDelegate.h */,
 				A7FDA3511BE2C4610044F519 /* AppDelegate.m */,
 				A7FDA3531BE2C4610044F519 /* ViewController.h */,
@@ -262,6 +268,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7E7EB171BE9035B004F6FDB /* Localizable.strings in Resources */,
 				A7BFB5CE1BE3C3390082C3CB /* Huse of Stork@3x.png in Resources */,
 				A7FDA35D1BE2C4610044F519 /* LaunchScreen.storyboard in Resources */,
 				A7FDA3811BE2F6FD0044F519 /* mala pizza.png in Resources */,
@@ -331,10 +338,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		A7E7EB191BE9035B004F6FDB /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A7E7EB181BE9035B004F6FDB /* pl */,
+				A7E7EB1C1BE904FA004F6FDB /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		A7FDA3561BE2C4610044F519 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				A7FDA3571BE2C4610044F519 /* Base */,
+				A7E7EB151BE901FA004F6FDB /* pl */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -343,6 +360,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				A7FDA35C1BE2C4610044F519 /* Base */,
+				A7E7EB161BE901FA004F6FDB /* pl */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

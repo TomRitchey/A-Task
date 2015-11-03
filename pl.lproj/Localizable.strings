@@ -1,0 +1,14 @@
+/* 
+  Dictionary.strings
+  Top GoT Chars
+
+  Created by Kacper Augustyniak on 03.11.2015.
+  Copyright © 2015 Kacper Augustyniak. All rights reserved.
+*/
+"Refreshing..." = "Odświerzanie...";
+"No Connection" = "Brak połączenia";
+"Tap OK to go to Safari." = "Naciśnij OK aby przejść do Safari.";
+"Do you want to visit page about %@?" = "Otworzyć stronę o postaci %@?";
+"Cancel" = "Anuluj";
+"OK" = "OK";
+"Check your internet connection or try again later." = "Sprawdź czy masz połączenie z intenetem lub spróbój ponownie.";
