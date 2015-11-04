@@ -211,9 +211,11 @@ int counterr;
                                 [topThumbnails replaceObjectAtIndex:i withObject:image];
                                 //if (!(i%3)) {
                                 //[mainTableView reloadData]; //}
-                                [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]]
-                                                 withRowAnimation:UITableViewRowAnimationNone];
-                                
+                                if ([[mainTableView indexPathsForVisibleRows] containsObject:[NSIndexPath indexPathForRow:i inSection:0]]) {
+                                    [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]]
+                                                         withRowAnimation:UITableViewRowAnimationNone];
+                                }
+                
                             });
                             //[mainTableView reloadData];
                         }
