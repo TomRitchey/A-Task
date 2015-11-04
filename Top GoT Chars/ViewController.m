@@ -49,11 +49,18 @@ int counterr;
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
     doubleTap.numberOfTouchesRequired = 1;
-    [self.tableView addGestureRecognizer:doubleTap];
+    [mainTableView addGestureRecognizer:doubleTap];
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
+    singleTap.numberOfTapsRequired = 1;
+    singleTap.numberOfTouchesRequired = 1;
+    [mainTableView addGestureRecognizer:singleTap];
+    
+    [singleTap requireGestureRecognizerToFail:doubleTap];
     
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     //longPress.minimumPressDuration = 0.5;
-    [self.tableView addGestureRecognizer:longPress];
+    [mainTableView addGestureRecognizer:longPress];
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc]init];
     [refreshControl addTarget:self action:@selector(refreshPull) forControlEvents:UIControlEventValueChanged];
@@ -81,28 +88,27 @@ int counterr;
 }
 
 - (void)initDefaultValues:(int)defaultValues{
-    NSString *loremIpsum = @"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.";
-    
-//    if(!defaultValues){
-//        for (int i = 0; i<limit; i++) {
-//            [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]];
-//            [topAbstracts  replaceObjectAtIndex:i withObject:loremIpsum];
-//            [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
-//            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
-//        }
-//    }else{
-//        for (int i = 0; i<limit; i++) {
-//            [topTitles  addObject:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]];
-//            [topAbstracts  addObject:loremIpsum];
-//            [topUrls addObject:[NSString stringWithFormat:@"empty"]];
-//            [topThumbnails addObject:[self genereteBlankImage]];
-//        }
-//    }
+
+    if(!defaultValues){
+        for (int i = 0; i<limit; i++) {
+            [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]];
+            [topAbstracts  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Lorem ipsum",nil)]];
+            [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
+            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+        }
+    }else{
+        for (int i = 0; i<limit; i++) {
+            [topTitles  addObject:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]];
+            [topAbstracts  addObject:[NSString stringWithFormat:NSLocalizedString(@"Lorem ipsum",nil)]];
+            [topUrls addObject:[NSString stringWithFormat:@"empty"]];
+            [topThumbnails addObject:[self genereteBlankImage]];
+        }
+    }
     switch (defaultValues) {
         case 0:
             for (int i = 0; i<limit; i++) {
                 [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]];
-                [topAbstracts  replaceObjectAtIndex:i withObject:loremIpsum];
+                [topAbstracts  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Lorem ipsum",nil)]];
                 [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
                 [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
             }
@@ -110,7 +116,7 @@ int counterr;
         case 1:
             for (int i = 0; i<limit; i++) {
                 [topTitles  addObject:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]];
-                [topAbstracts  addObject:loremIpsum];
+                [topAbstracts  addObject:[NSString stringWithFormat:NSLocalizedString(@"Lorem ipsum",nil)]];
                 [topUrls addObject:[NSString stringWithFormat:@"empty"]];
                 [topThumbnails addObject:[self genereteBlankImage]];
             }
@@ -272,8 +278,8 @@ int counterr;
     if (UIGestureRecognizerStateRecognized == tap.state)
     {
         CGPoint point = [tap locationInView:tap.view];
-        NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
-        //UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        NSIndexPath* indexPath = [mainTableView indexPathForRowAtPoint:point];
+        //UITableViewCell* cell = [mainTableView cellForRowAtIndexPath:indexPath];
         if(![[topTitles objectAtIndex:indexPath.row]  isEqual:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]]){
             if([[topUrls objectAtIndex:indexPath.row]isEqualToString:@"empty"]){
                 [self showErrorMessage];
@@ -289,6 +295,15 @@ int counterr;
     //NSLog(@"can load now");
 }
 #pragma mark Handling user input
+
+- (void)singleTap:(UISwipeGestureRecognizer*)tap {
+    if (UIGestureRecognizerStateRecognized == tap.state)
+    {
+        CGPoint point = [tap locationInView:tap.view];
+        NSIndexPath* indexPath = [mainTableView indexPathForRowAtPoint:point];
+        [self showAbstract:indexPath.row];
+    }
+}
 
 - (void)doubleTap:(UISwipeGestureRecognizer*)tap {
     [self goToCharacterSite:tap];
@@ -369,7 +384,26 @@ int counterr;
     return cell;
 }
 
-#pragma mark Others
+#pragma mark Allert messages
+
+- (void)showAbstract:(NSInteger)index {
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:[NSString  stringWithFormat:@""]
+                                          message:[NSString stringWithFormat:NSLocalizedString(@"%@",nil),[topAbstracts objectAtIndex:index]]
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+
+    
+    UIAlertAction *okAction = [UIAlertAction
+                               actionWithTitle:[NSString stringWithFormat:NSLocalizedString(@"OK",nil)]
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction *action)
+                               { }];
+    
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
 
 - (void)showErrorMessage {
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Connection",nil)
@@ -415,6 +449,7 @@ int counterr;
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
+#pragma mark Allert
 
 - (UIImage *)genereteBlankImage {
    

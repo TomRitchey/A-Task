@@ -8,8 +8,9 @@
 "Refreshing..." = "Odświerzanie...";
 "No Connection" = "Brak połączenia";
 "Tap OK to go to Safari." = "Naciśnij OK aby przejść do Safari.";
-"Do you want to visit page about %@?" = "Otworzyć stronę \"%@\"?";
+"Do you want to visit page about %@?" = "Otworzyć stronę zatytułowaną \"%@\"?";
 "Cancel" = "Anuluj";
 "OK" = "OK";
 "Check your internet connection or try again later." = "Sprawdź czy masz połączenie z intenetem lub spróbój ponownie później.";
 "Dismiss" = "OK";
+"Lorem ipsum" = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.";

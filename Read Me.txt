@@ -1,3 +1,5 @@
 Pull list to refresh. Refreshing many times in a row quickly should not crash application, but it sure can.
 
+Tap to see full shortened description.
+
 Double tap or long press to go to article.
