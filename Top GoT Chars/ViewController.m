@@ -89,21 +89,21 @@ int counterr;
 
 - (void)initDefaultValues:(int)defaultValues{
 
-    if(!defaultValues){
-        for (int i = 0; i<limit; i++) {
-            [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]];
-            [topAbstracts  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Lorem ipsum",nil)]];
-            [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
-            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
-        }
-    }else{
-        for (int i = 0; i<limit; i++) {
-            [topTitles  addObject:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]];
-            [topAbstracts  addObject:[NSString stringWithFormat:NSLocalizedString(@"Lorem ipsum",nil)]];
-            [topUrls addObject:[NSString stringWithFormat:@"empty"]];
-            [topThumbnails addObject:[self genereteBlankImage]];
-        }
-    }
+//    if(!defaultValues){
+//        for (int i = 0; i<limit; i++) {
+//            [topTitles  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]];
+//            [topAbstracts  replaceObjectAtIndex:i withObject:[NSString stringWithFormat:NSLocalizedString(@"Lorem ipsum",nil)]];
+//            [topUrls replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"empty"]];
+//            [topThumbnails replaceObjectAtIndex:i withObject:[self genereteBlankImage]];
+//        }
+//    }else{
+//        for (int i = 0; i<limit; i++) {
+//            [topTitles  addObject:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]];
+//            [topAbstracts  addObject:[NSString stringWithFormat:NSLocalizedString(@"Lorem ipsum",nil)]];
+//            [topUrls addObject:[NSString stringWithFormat:@"empty"]];
+//            [topThumbnails addObject:[self genereteBlankImage]];
+//        }
+//    }
     switch (defaultValues) {
         case 0:
             for (int i = 0; i<limit; i++) {
