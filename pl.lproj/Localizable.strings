@@ -8,8 +8,8 @@
 "Refreshing..." = "Odświerzanie...";
 "No Connection" = "Brak połączenia";
 "Tap OK to go to Safari." = "Naciśnij OK aby przejść do Safari.";
-"Do you want to visit page about %@?" = "Otworzyć stronę o postaci %@?";
+"Do you want to visit page about %@?" = "Otworzyć stronę \"%@\"?";
 "Cancel" = "Anuluj";
 "OK" = "OK";
-"Check your internet connection or try again later." = "Sprawdź czy masz połączenie z intenetem lub spróbój ponownie.";
+"Check your internet connection or try again later." = "Sprawdź czy masz połączenie z intenetem lub spróbój ponownie później.";
 "Dismiss" = "OK";

@@ -210,8 +210,10 @@ int counterr;
                                 if([downloadImageOperation isCancelled]){return;}
                                 [topThumbnails replaceObjectAtIndex:i withObject:image];
                                 //if (!(i%3)) {
-                                [mainTableView reloadData]; //}
- 
+                                //[mainTableView reloadData]; //}
+                                [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]]
+                                                 withRowAnimation:UITableViewRowAnimationNone];
+                                
                             });
                             //[mainTableView reloadData];
                         }
