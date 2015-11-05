@@ -26,7 +26,7 @@
 @synthesize loadingDataQueue;
 @synthesize loadingDataAllowed;
 
-int counterr;
+//int counterr;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -219,7 +219,7 @@ int counterr;
                                 //[mainTableView reloadData]; //}
                                 if ([[mainTableView indexPathsForVisibleRows] containsObject:[NSIndexPath indexPathForRow:i inSection:0]]) {
                                     [mainTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]]
-                                                         withRowAnimation:UITableViewRowAnimationNone];
+                                                         withRowAnimation:UITableViewRowAnimationFade];
                                 }
                 
                             });
@@ -379,7 +379,9 @@ int counterr;
     cell.detailTextLabel.text = [topAbstracts objectAtIndex:indexPath.row];
     //cell.imageView.image = [topThumbnails objectAtIndex:indexPath.row];
     
-    [UIView transitionWithView:cell.imageView duration:0.7f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{ cell.imageView.image = [topThumbnails objectAtIndex:indexPath.row]; } completion:NULL];
+    //[UIView transitionWithView:cell.imageView duration:0.7f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+        cell.imageView.image = [topThumbnails objectAtIndex:indexPath.row];
+    //} completion:NULL];
     
     return cell;
 }
