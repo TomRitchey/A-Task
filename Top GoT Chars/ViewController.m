@@ -308,9 +308,35 @@
     //NSLog(@"can load now");
 }
 
+#pragma mark Subviews
 
+- (void)showWebSubwiew:(NSInteger)index{
+    
+    [self viewWillAppear:YES];
+    self.webContainerView.frame=self.view.bounds;
+    
+    
+    NSURL *url = [NSURL URLWithString:[topUrls objectAtIndex:index]];
+    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+    
+    mainTableView.scrollEnabled = NO;
+    [self.view addSubview:self.webContainerView];
+    
+    self.navBar.title = [topTitles objectAtIndex:index];
+    [self.webView loadRequest:requestObj];
+    
+}
+
+- (void)hideWebSubwiew{
+    
+    mainTableView.scrollEnabled = YES;
+    [self.webContainerView removeFromSuperview];
+}
 
 #pragma mark Handling user input
+- (IBAction)hideSubView:(id)sender {
+    [self hideWebSubwiew];
+}
 
 - (void)singleTap:(UISwipeGestureRecognizer*)tap {
     if (UIGestureRecognizerStateRecognized == tap.state)
@@ -321,7 +347,8 @@
 
 
         if (![[topTitles objectAtIndex:indexPath.row ] isEqualToString:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]]&&![[topTitles objectAtIndex:indexPath.row ] isEqualToString:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]]) {
-            [self performSegueWithIdentifier:@"Show embeded web page" sender:indexPath];
+            //[self performSegueWithIdentifier:@"Show embeded web page" sender:indexPath];
+            [self showWebSubwiew:indexPath.row];
         }else{
             [self showErrorMessage];
         }

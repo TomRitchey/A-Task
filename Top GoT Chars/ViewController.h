@@ -12,18 +12,22 @@
 
 @interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 
-    @property bool loadingDataAllowed;
-    @property id jsonData;
-    @property NSMutableArray *topTitles;
-    @property NSMutableArray *topAbstracts;
-    @property NSMutableArray *topThumbnails;
-    @property NSMutableArray *topUrls;
-    @property IBOutlet UITableView *mainTableView;
-    @property NSString *category;
-    @property int limit;
-    @property NSOperationQueue *loadingThumbnailsQueue;
-    @property NSOperationQueue *loadingDataQueue;
-    @property NSTimer *Timer;
+@property bool loadingDataAllowed;
+@property id jsonData;
+@property NSMutableArray *topTitles;
+@property NSMutableArray *topAbstracts;
+@property NSMutableArray *topThumbnails;
+@property NSMutableArray *topUrls;
+@property IBOutlet UITableView *mainTableView;
+@property NSString *category;
+@property int limit;
+@property NSOperationQueue *loadingThumbnailsQueue;
+@property NSOperationQueue *loadingDataQueue;
+@property NSTimer *Timer;
+@property (strong, nonatomic) IBOutlet UIView *webContainerView;
+@property (strong, nonatomic) IBOutlet UIWebView *webView;
+@property (strong, nonatomic) IBOutlet UINavigationItem *navBar;
+
 
 @end
 

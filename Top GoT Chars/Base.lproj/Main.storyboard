@@ -88,57 +88,52 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
                         <outlet property="mainTableView" destination="nXA-Ti-0J5" id="Klt-u6-rp3"/>
-                        <segue destination="X4J-H7-dTI" kind="presentation" identifier="Show embeded web page" modalPresentationStyle="currentContext" modalTransitionStyle="coverVertical" id="yOv-Du-4lQ"/>
+                        <outlet property="navBar" destination="rxR-Pw-7ve" id="koh-HE-NhF"/>
+                        <outlet property="webContainerView" destination="0By-5i-L5a" id="PLx-Ms-LnV"/>
+                        <outlet property="webView" destination="nwL-dq-ceT" id="alM-vy-mjr"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uEo-ol-Ymh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleAspectFit" id="0By-5i-L5a">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <webView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nwL-dq-ceT">
+                            <rect key="frame" x="0.0" y="64" width="600" height="556"/>
+                            <animations/>
+                            <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                        </webView>
+                        <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qyw-Qy-fLk">
+                            <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                            <animations/>
+                            <items>
+                                <navigationItem title="Title" id="rxR-Pw-7ve">
+                                    <barButtonItem key="leftBarButtonItem" systemItem="stop" id="Zox-7s-b8j">
+                                        <connections>
+                                            <action selector="hideSubView:" destination="sCN-JD-NeR" id="IHU-hG-BEO"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </navigationItem>
+                            </items>
+                        </navigationBar>
+                    </subviews>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailingMargin" secondItem="qyw-Qy-fLk" secondAttribute="trailing" constant="-20" id="Hx5-UI-s5x"/>
+                        <constraint firstItem="qyw-Qy-fLk" firstAttribute="leading" secondItem="0By-5i-L5a" secondAttribute="leadingMargin" constant="-20" id="aug-Vm-sSM"/>
+                        <constraint firstAttribute="trailing" secondItem="nwL-dq-ceT" secondAttribute="trailing" id="ug9-MJ-YkH"/>
+                        <constraint firstItem="nwL-dq-ceT" firstAttribute="leading" secondItem="0By-5i-L5a" secondAttribute="leading" id="wgF-gW-xCs"/>
+                        <constraint firstItem="nwL-dq-ceT" firstAttribute="top" secondItem="qyw-Qy-fLk" secondAttribute="bottom" id="xEb-B4-MEp"/>
+                    </constraints>
+                </view>
             </objects>
-            <point key="canvasLocation" x="801" y="287"/>
+            <point key="canvasLocation" x="1473" y="187"/>
         </scene>
         <!--WebViewController-->
         <scene sceneID="fPV-cl-W6b">
             <objects>
-                <viewController title="WebViewController" id="X4J-H7-dTI" customClass="WebViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="0gH-MJ-nbZ"/>
-                        <viewControllerLayoutGuide type="bottom" id="oHZ-Ux-J3P"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="0By-5i-L5a" customClass="Web">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <webView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nwL-dq-ceT">
-                                <rect key="frame" x="0.0" y="64" width="600" height="556"/>
-                                <animations/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
-                            </webView>
-                            <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qyw-Qy-fLk">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <animations/>
-                                <items>
-                                    <navigationItem title="Title" id="rxR-Pw-7ve">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="Zox-7s-b8j">
-                                            <connections>
-                                                <segue destination="clo-Zh-f4e" kind="show" id="AyU-bH-qTa"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                        </subviews>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="qyw-Qy-fLk" secondAttribute="trailing" constant="-20" id="Hx5-UI-s5x"/>
-                            <constraint firstItem="nwL-dq-ceT" firstAttribute="top" secondItem="0gH-MJ-nbZ" secondAttribute="bottom" id="L6f-hi-zYK"/>
-                            <constraint firstItem="qyw-Qy-fLk" firstAttribute="leading" secondItem="0By-5i-L5a" secondAttribute="leadingMargin" constant="-20" id="aug-Vm-sSM"/>
-                            <constraint firstItem="qyw-Qy-fLk" firstAttribute="top" secondItem="0gH-MJ-nbZ" secondAttribute="bottom" id="cpU-kB-g3a"/>
-                            <constraint firstAttribute="trailing" secondItem="nwL-dq-ceT" secondAttribute="trailing" id="ug9-MJ-YkH"/>
-                            <constraint firstItem="nwL-dq-ceT" firstAttribute="bottom" secondItem="oHZ-Ux-J3P" secondAttribute="top" id="vII-Rj-pT4"/>
-                            <constraint firstItem="nwL-dq-ceT" firstAttribute="leading" secondItem="0By-5i-L5a" secondAttribute="leading" id="wgF-gW-xCs"/>
-                            <constraint firstItem="nwL-dq-ceT" firstAttribute="top" secondItem="qyw-Qy-fLk" secondAttribute="bottom" id="xEb-B4-MEp"/>
-                        </constraints>
-                    </view>
+                <viewController title="WebViewController" id="X4J-H7-dTI" sceneMemberID="viewController">
                     <connections>
                         <outlet property="navigationTitle" destination="rxR-Pw-7ve" id="M5z-er-9In"/>
                         <outlet property="webViewWindow" destination="nwL-dq-ceT" id="Ksd-ck-a8e"/>

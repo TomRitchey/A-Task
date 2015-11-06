@@ -10,7 +10,6 @@
 		A71598991BE39A200065EA7F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A71598981BE39A200065EA7F /* SystemConfiguration.framework */; };
 		A73D8D311BE77CDD00B21FDF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = A73D8D301BE77CCC00B21FDF /* .gitignore */; };
 		A748FE681BE8BAE6005A73DD /* Read Me.txt in Resources */ = {isa = PBXBuildFile; fileRef = A748FE671BE8BAE6005A73DD /* Read Me.txt */; };
-		A7859C841BECED490048F9EB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7859C831BECED490048F9EB /* WebViewController.m */; };
 		A7BFB5CE1BE3C3390082C3CB /* Huse of Stork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */; };
 		A7BFB5D21BE3C8B70082C3CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */; };
 		A7E7EB171BE9035B004F6FDB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A7E7EB191BE9035B004F6FDB /* Localizable.strings */; };
@@ -45,8 +44,6 @@
 		A71598981BE39A200065EA7F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A73D8D301BE77CCC00B21FDF /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		A748FE671BE8BAE6005A73DD /* Read Me.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Read Me.txt"; sourceTree = "<group>"; };
-		A7859C821BECED490048F9EB /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
-		A7859C831BECED490048F9EB /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		A7BFB5CD1BE3C3390082C3CB /* Huse of Stork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Huse of Stork@3x.png"; sourceTree = "<group>"; };
 		A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7E7EB151BE901FA004F6FDB /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Main.strings; sourceTree = "<group>"; };
@@ -131,8 +128,6 @@
 				A7FDA3541BE2C4610044F519 /* ViewController.m */,
 				A73D8D301BE77CCC00B21FDF /* .gitignore */,
 				A7FDA3561BE2C4610044F519 /* Main.storyboard */,
-				A7859C821BECED490048F9EB /* WebViewController.h */,
-				A7859C831BECED490048F9EB /* WebViewController.m */,
 				A7FDA35B1BE2C4610044F519 /* LaunchScreen.storyboard */,
 				A7BFB5D11BE3C8B70082C3CB /* Assets.xcassets */,
 				A7FDA35E1BE2C4610044F519 /* Info.plist */,
@@ -308,7 +303,6 @@
 				A7FDA3551BE2C4610044F519 /* ViewController.m in Sources */,
 				A7FDA3521BE2C4610044F519 /* AppDelegate.m in Sources */,
 				A7FDA34F1BE2C4610044F519 /* main.m in Sources */,
-				A7859C841BECED490048F9EB /* WebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
