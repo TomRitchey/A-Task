@@ -66,6 +66,9 @@
     [refreshControl addTarget:self action:@selector(refreshPull) forControlEvents:UIControlEventValueChanged];
     //refreshControl.tintColor = [UIColor blueColor];
     self.refreshControl = refreshControl;
+//    
+//    static dispatch_once_t once;
+//    dispatch_once(&once, ^{
     
     [self initDefaultValues:YES];
     
@@ -79,7 +82,7 @@
         usleep(30000);
         [self downloadData:limit inCategory:category];
     });
-    
+    //});
 }
 
 - (void)didReceiveMemoryWarning {
