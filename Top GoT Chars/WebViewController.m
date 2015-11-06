@@ -16,7 +16,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationTitle.title = self.labelString;
-    // Do any additional setup after loading the view.
+    
+    NSURL *url = [NSURL URLWithString:self.urlString];
+    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+    [_webViewWindow loadRequest:requestObj];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -132,6 +132,16 @@
     }
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if([segue.identifier isEqualToString:@"Show embeded web page"]){
+        WebViewController *controller = (WebViewController *)segue.destinationViewController;
+        controller.labelString = [topTitles objectAtIndex:[sender row]];
+        controller.urlString = [topUrls objectAtIndex:[sender row]];
+        
+    }
+    //NSLog(@"segue");
+}
+
 #pragma mark - Networking
 
 - (void)downloadData:(int)dataLimit inCategory:(NSString*)dataCategory {
@@ -295,14 +305,7 @@
     //NSLog(@"can load now");
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if([segue.identifier isEqualToString:@"Show embeded web page"]){
-        WebViewController *controller = (WebViewController *)segue.destinationViewController;
-        controller.labelString = [topTitles objectAtIndex:[sender row]];
-        
-    }
-    //NSLog(@"segue");
-}
+
 
 #pragma mark Handling user input
 
