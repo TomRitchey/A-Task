@@ -294,6 +294,16 @@
     loadingDataAllowed = YES;
     //NSLog(@"can load now");
 }
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if([segue.identifier isEqualToString:@"Show embeded web page"]){
+        WebViewController *controller = (WebViewController *)segue.destinationViewController;
+        controller.labelString = [topTitles objectAtIndex:[sender row]];
+        
+    }
+    //NSLog(@"segue");
+}
+
 #pragma mark Handling user input
 
 - (void)singleTap:(UISwipeGestureRecognizer*)tap {
@@ -301,7 +311,15 @@
     {
         CGPoint point = [tap locationInView:tap.view];
         NSIndexPath* indexPath = [mainTableView indexPathForRowAtPoint:point];
-        [self showAbstract:indexPath.row];
+        //[self showAbstract:indexPath.row];
+
+
+        if (![[topTitles objectAtIndex:indexPath.row ] isEqualToString:[NSString stringWithFormat:NSLocalizedString(@"Refreshing...",nil)]]&&![[topTitles objectAtIndex:indexPath.row ] isEqualToString:[NSString stringWithFormat:NSLocalizedString(@"No Connection",nil)]]) {
+            [self performSegueWithIdentifier:@"Show embeded web page" sender:indexPath];
+        }else{
+            [self showErrorMessage];
+        }
+        
     }
 }
 
@@ -385,6 +403,12 @@
     
     return cell;
 }
+
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    [self performSegueWithIdentifier:@"Show embeded web page" sender:tableView];
+//    NSLog(@"strinng");
+//}
 
 #pragma mark Allert messages
 

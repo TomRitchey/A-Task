@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <SystemConfiguration/SCNetworkReachability.h>
+#import "WebViewController.h"
 
 @interface ViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 
